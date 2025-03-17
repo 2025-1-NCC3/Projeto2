@@ -8,7 +8,7 @@ Um aplicativo mobile inovador para tornar as viagens da Uber mais seguras, utili
 - **Julia Tosato de Jesus** - RA: 24026375  
 - **Vitor do Amaral Pereira** - RA: 23025384  
 - **João Victor Rezende Silva** - RA: 24025945
-- **Arthur Paltrinieri Silva ** - RA:24026559
+- **Arthur Paltrinieri Silva** - RA:24026559
 
 ## 🚀 Tecnologias Utilizadas
 
