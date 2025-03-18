@@ -1,5 +1,5 @@
 # Projeto2
-# 🚘 Ride Safer - Segurança para Motoristas e Passageiros
+# 🚘 Safe Ride - Segurança para Motoristas e Passageiros
 
 Um aplicativo mobile inovador para tornar as viagens da Uber mais seguras, utilizando tecnologia avançada para análise comportamental, verificação de segurança, recompensas e preferências de gênero.
 
