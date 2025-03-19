@@ -12,9 +12,9 @@ Um aplicativo mobile inovador para tornar as viagens da Uber mais seguras, utili
 
 ## 🚀 Tecnologias Utilizadas
 
-- [✔] React Native (para desenvolvimento mobile)
-- [✔] Firebase (para autenticação e banco de dados)
-- [✔] Machine Learning (para análise comportamental)
+- 
+- 
+- 
 - [✔] API da Uber (para integração de viagens)
 
 ## 📌 Funcionalidades
@@ -30,10 +30,7 @@ A arquitetura desse projeto envolve uma série de funcionalidades avançadas e s
 
 ### Pré-requisitos
 
-Antes de começar, você precisará ter as seguintes ferramentas instaladas em sua máquina:
-- Node.js e npm
-- Expo CLI (para rodar o app no ambiente mobile)
-- Firebase SDK (para integração de autenticação e banco de dados)
+
 
 ### Instalação e Execução
 
