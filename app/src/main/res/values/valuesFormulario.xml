@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="form">Formulário de Análise Comportamental</string>
+    <string name="pE1">1. Você costuma ansiar por emoção?</string>
+    <string name="pE2">2. Você geralmente é despreocupado?</string>
+    <string name="pE3">3. Você para e pensa sobre as coisas antes de fazer qualquer coisa?</string>
+    <string name="pE4">4. De repente você se sente tímido quando quer conversar com um estranho atraente?</string>
+    <string name="pE5">5. Geralmente você prefere ler a conhecer pessoas?</string>
+    <string name="p6">6. Ocasionalmente, você tem pensamentos e ideias que não gostaria que outras pessoas soubessem?</string>
+    <string name="p7">7. Seu humor sobe e desce?</string>
+    <string name="p8">8. Você costuma fazer e dizer coisas rapidamente, sem parar para pensar?</string>
+    <string name="p9">9. Você já se sentiu "apenas infeliz" sem um bom motivo?</string>
+    <string name="p10">10. Você faria quase qualquer coisa por um desafio?</string>
+    <string name="p11">11. Você acha difícil aceitar um NÃO como resposta</string>
+    <string name="p12">12. De vez em quando você perde a paciência e fica com raiva?</string>
+    <string name="p13">13. Você costuma fazer coisas no calor do momento?</string>
+    <string name="p14">14. Você costuma se preocupar com coisas que deveria ter feito ou dito?</string>
+    <string name="p15">15. Seus sentimentos são facilmente magoados?</string>
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
+    <string name="linha">---------------------------------------------------------------------------</string>
+</resources>
