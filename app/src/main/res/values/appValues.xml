@@ -33,6 +33,10 @@
     <string name="btnIniciar">Iniciar</string>
     <string name="textTermoPoliticaVisualizar"><u>Termo de Política de Privacidade</u></string>
 
+    <!-- Página de Resultado da Análise Comportamental -->
+    <string name="textResultado">Resultado da análise:</string>
+    <string name="btnVoltar">Voltar ao Início</string>
+
     <!-- Botôes do Formulário -->
     <string name="btnNext">Seguinte</string>
     <string name="btnPrevious">Anterior</string>
