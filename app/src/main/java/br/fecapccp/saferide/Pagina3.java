@@ -64,16 +64,15 @@ public class Pagina3 extends AppCompatActivity {
             String temperamento = respostas.determinarTemperamento();
 
             // Exibir o resultado
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Seu Perfil de Temperamento")
-                    .setMessage(temperamento)
-                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                    .show();
+            Intent intent = new Intent(this, Pagina4.class);
+            intent.putExtra("resultado", temperamento);
+            startActivity(intent);
+            finish();
         }
     }
 
     public void anterior(View view){
-        Intent voltarTela = new Intent(getApplicationContext(), MainActivity.class);
+        Intent voltarTela = new Intent(getApplicationContext(), Pagina2.class);
         startActivity(voltarTela); // Adicionado startActivity para efetivar a mudança de tela
     }
 }

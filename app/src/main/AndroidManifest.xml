@@ -13,6 +13,9 @@
         android:theme="@style/Theme.SafeRide"
         tools:targetApi="31">
         <activity
+            android:name=".Pagina4"
+            android:exported="false" />
+        <activity
             android:name=".PoliticaPrivacidade"
             android:exported="false" />
         <activity
@@ -32,8 +35,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>
