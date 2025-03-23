@@ -28,6 +28,11 @@
     <!-- Respostas do Formulário -->
     <string name="textRespostaHint">Responda sim ou nao</string>
 
+    <!-- Termo e Política de Privacidade -->
+    <string name="textTermoPoliticaPrivacidade">Estou de Acordo com o Termo de Política de Privacidade</string>
+    <string name="btnIniciar">Iniciar</string>
+    <string name="textTermoPoliticaVisualizar"><u>Termo de Política de Privacidade</u></string>
+
     <!-- Botôes do Formulário -->
     <string name="btnNext">Seguinte</string>
     <string name="btnPrevious">Anterior</string>
