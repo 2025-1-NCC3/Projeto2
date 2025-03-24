@@ -13,6 +13,29 @@
         android:theme="@style/Theme.SafeRide"
         tools:targetApi="31">
         <activity
+            android:name=".editProfile"
+            android:exported="false" />
+        <activity
+            android:name=".Number"
+            android:exported="false" />
+        <activity
+            android:name=".Password"
+            android:exported="false" />
+        <activity
+            android:name=".Email"
+            android:exported="false" />
+        <activity
+            android:name=".Name"
+            android:exported="false" />
+        <activity
+            android:name=".Login"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".Pagina4"
             android:exported="false" />
         <activity
@@ -20,13 +43,7 @@
             android:exported="false" />
         <activity
             android:name=".PaginaPrincipal"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".Pagina3"
             android:exported="false" />
@@ -35,7 +52,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>
