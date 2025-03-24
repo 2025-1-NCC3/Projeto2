@@ -29,7 +29,7 @@ public class Pagina4 extends AppCompatActivity {
 
     // Método para voltar à tela inicial
     public void voltarInicio(View view) {
-        Intent intent = new Intent(this, PaginaPrincipal.class);
+        Intent intent = new Intent(this, Menu.class);
         startActivity(intent);
         finish(); // Finaliza a atividade para não ficar na pilha
     }

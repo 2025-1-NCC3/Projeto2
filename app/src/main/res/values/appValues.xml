@@ -38,8 +38,8 @@
     <string name="btnVoltar">Voltar ao Início</string>
 
     <!-- Botôes do Formulário -->
-    <string name="btnNext">Seguinte</string>
-    <string name="btnPrevious">Anterior</string>
+    <string name="btnNext">Próximo</string>
+    <string name="btnPrevious">Voltar</string>
     <string name="btnAnalize">Analisar</string>
 
 </resources>
