@@ -1,9 +1,12 @@
 package br.fecapccp.saferide;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +18,9 @@ public class editProfile extends AppCompatActivity {
 
     private EditText userName, userSurname, userEmail, userNumber;
     private Button editProfileButton, deleteProfileButton;
+    private ImageView backButton;
     private Usuario usuario;
+    private boolean isEditing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,7 @@ public class editProfile extends AppCompatActivity {
         userNumber = findViewById(R.id.userNumber);
         editProfileButton = findViewById(R.id.editProfile);
         deleteProfileButton = findViewById(R.id.deleteProfile);
+        backButton = findViewById(R.id.backButton);
 
         // Desabilita a edição dos campos inicialmente
         userName.setEnabled(false);
@@ -44,7 +50,7 @@ public class editProfile extends AppCompatActivity {
         userEmail.setEnabled(false);
         userNumber.setEnabled(false);
 
-        // Recupera o objeto Usuario passado pela atividade anterior (Number)
+        // Recupera o objeto Usuario passado pela atividade anterior
         usuario = (Usuario) getIntent().getSerializableExtra("usuario");
 
         // Verifica se o objeto Usuario foi recebido corretamente
@@ -71,6 +77,7 @@ public class editProfile extends AppCompatActivity {
 
                 // Altera o texto do botão
                 editProfileButton.setText(isEnabled ? "Salvar" : "Editar");
+                isEditing = isEnabled;
 
                 // Se estiver salvando, atualiza o objeto Usuario
                 if (!isEnabled) {
@@ -79,7 +86,8 @@ public class editProfile extends AppCompatActivity {
                     usuario.setEmail(userEmail.getText().toString().trim());
                     usuario.setNumber(userNumber.getText().toString().trim());
 
-                    // Implementar a lógica para editar os dados do usuário no Banco de Dados
+                    // Aqui você pode adicionar a lógica para salvar no banco de dados
+                    Toast.makeText(editProfile.this, "Perfil atualizado", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -89,6 +97,26 @@ public class editProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Implementar a lógica para apagar o Perfil no banco de dados
+            }
+        });
+
+        // Configura o listener do botão de voltar
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Se estiver editando, salva as alterações automaticamente
+                if (isEditing) {
+                    usuario.setName(userName.getText().toString().trim());
+                    usuario.setSurname(userSurname.getText().toString().trim());
+                    usuario.setEmail(userEmail.getText().toString().trim());
+                    usuario.setNumber(userNumber.getText().toString().trim());
+                }
+
+                // Volta para o Menu
+                Intent intent = new Intent(editProfile.this, Menu.class);
+                intent.putExtra("usuario", usuario);
+                startActivity(intent);
+                finish(); // Finaliza a activity atual
             }
         });
     }

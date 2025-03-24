@@ -58,8 +58,11 @@ public class Password extends AppCompatActivity {
                 // Atualiza o objeto Usuario com a senha
                 usuario.setPassword(password);
 
-                // Passa o objeto Usuario para a próxima atividade (editProfile)
-                Intent intent = new Intent(Password.this, editProfile.class);
+                // IMPORTANTE: Adicione esta linha para cadastrar o usuário
+                Login.cadastrarUsuario(usuario);
+
+                // Passa o objeto Usuario para a próxima atividade (Menu)
+                Intent intent = new Intent(Password.this, Menu.class);
                 intent.putExtra("usuario", usuario);
                 startActivity(intent);
             }
