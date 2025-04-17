@@ -18,6 +18,12 @@
         android:theme="@style/Theme.SafeRide"
         tools:targetApi="31">
         <activity
+            android:name=".ano_de_nascimento"
+            android:exported="false" />
+        <activity
+            android:name=".Genero"
+            android:exported="false" />
+        <activity
             android:name=".ConfirmarViagem"
             android:exported="false" />
         <activity

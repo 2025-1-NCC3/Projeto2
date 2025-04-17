@@ -1,138 +1,101 @@
 package br.fecapccp.saferide;
 
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 public class ConfirmarViagem extends AppCompatActivity {
-    private static final String TAG = "ConfirmarViagem";
-    private PlacesClient placesClient;
-    private AutoCompleteTextView origemInput, destinoInput;
-    private ImageButton btnAdicionarDestino, btnBack;
-    private Button btnConfirmarViagem; // Novo botão para confirmar viagem
-    private AutocompleteSessionToken sessionToken;
+
+    private AutoCompleteTextView inputOrigem, inputDestino;
     private LinearLayout suggestionsList;
-
-    // Variável para rastrear qual campo está sendo preenchido
-    private boolean preenchendoOrigem = false;
-
-    // Para armazenar os dados dos locais selecionados
-    private String origemPlaceId, destinoPlaceId;
-    private double origemLat, origemLng, destinoLat, destinoLng;
+    private ImageButton btnBack, btnAdicionarDestino;
+    private MaterialButton btnConfirmarViagem;
+    private PlacesClient placesClient;
+    private AutocompleteSessionToken sessionToken;
+    private LatLng origemLatLng, destinoLatLng;
     private String origemEndereco, destinoEndereco;
+    private boolean isOrigemFocused = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmar_viagem);
 
-        // Inicializar Places API
+        // Inicializa a API Places
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "AIzaSyAonm1HAxkQGlm5vpUsNmTQZ0w4HTtsHkU", Locale.getDefault());
+            Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
         }
         placesClient = Places.createClient(this);
         sessionToken = AutocompleteSessionToken.newInstance();
 
-        // Inicializar componentes de UI
-        origemInput = findViewById(R.id.input_origem);
-        destinoInput = findViewById(R.id.input_destino);
-        btnAdicionarDestino = findViewById(R.id.btn_adicionar_destino);
-        btnBack = findViewById(R.id.btn_back);
+        // Inicializa os componentes da UI
+        inputOrigem = findViewById(R.id.input_origem);
+        inputDestino = findViewById(R.id.input_destino);
         suggestionsList = findViewById(R.id.suggestions_list);
-
-        // Adicionar botão para confirmar viagem - você precisará adicionar este botão ao layout
+        btnBack = findViewById(R.id.btn_back);
+        btnAdicionarDestino = findViewById(R.id.btn_adicionar_destino);
         btnConfirmarViagem = findViewById(R.id.btn_confirmar_viagem);
 
-        // Configurar listeners para os campos de texto
-        setupTextChangeListener(origemInput);
-        setupTextChangeListener(destinoInput);
-
-        // Configurar listener para botão voltar
+        // Configurar botão voltar
         btnBack.setOnClickListener(v -> finish());
 
-        // Configurar listener para botão adicionar destino
+        // Configurar botão adicionar destino
         btnAdicionarDestino.setOnClickListener(v -> {
-            Toast.makeText(this, "Adicionar novo destino", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Funcionalidade de múltiplos destinos em desenvolvimento", Toast.LENGTH_SHORT).show();
         });
 
-        // Configurar listener para o botão confirmar viagem
-        if (btnConfirmarViagem != null) {
-            btnConfirmarViagem.setOnClickListener(v -> {
-                if (validarCampos()) {
-                    iniciarViagem();
+        // Configurar eventos de foco
+        inputOrigem.setOnFocusChangeListener((v, hasFocus) -> {
+            isOrigemFocused = hasFocus;
+            if (hasFocus) {
+                if (inputOrigem.getText().length() >= 2) {
+                    searchPlaces(inputOrigem.getText().toString());
                 }
-            });
-        }
-    }
+            }
+        });
 
-    private boolean validarCampos() {
-        if (origemEndereco == null || origemEndereco.isEmpty()) {
-            Toast.makeText(this, "Por favor, selecione o ponto de partida", Toast.LENGTH_SHORT).show();
-            return false;
-        }
+        inputDestino.setOnFocusChangeListener((v, hasFocus) -> {
+            isOrigemFocused = !hasFocus;
+            if (hasFocus) {
+                if (inputDestino.getText().length() >= 2) {
+                    searchPlaces(inputDestino.getText().toString());
+                }
+            }
+        });
 
-        if (destinoEndereco == null || destinoEndereco.isEmpty()) {
-            Toast.makeText(this, "Por favor, selecione o destino", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        return true;
-    }
-
-    private void iniciarViagem() {
-        // Criar Intent para abrir a MapaActivity
-        Intent intent = new Intent(ConfirmarViagem.this, MapsActivity.class);
-
-        // Passar os dados como extras
-        intent.putExtra("origem_lat", origemLat);
-        intent.putExtra("origem_lng", origemLng);
-        intent.putExtra("origem_endereco", origemEndereco);
-
-        intent.putExtra("destino_lat", destinoLat);
-        intent.putExtra("destino_lng", destinoLng);
-        intent.putExtra("destino_endereco", destinoEndereco);
-
-        startActivity(intent);
-    }
-
-    private void setupTextChangeListener(final AutoCompleteTextView textView) {
-        textView.addTextChangedListener(new TextWatcher() {
+        // Configurar TextWatcher para busca de endereços
+        TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() >= 2) {
-                    fetchPlacePredictions(s.toString());
+                    searchPlaces(s.toString());
                 } else {
                     suggestionsList.setVisibility(View.GONE);
                 }
@@ -140,125 +103,167 @@ public class ConfirmarViagem extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {}
+        };
+
+        inputOrigem.addTextChangedListener(textWatcher);
+        inputDestino.addTextChangedListener(textWatcher);
+
+        // Botão confirmar viagem
+        btnConfirmarViagem.setOnClickListener(v -> {
+            if (origemLatLng != null && destinoLatLng != null) {
+                // Inicia a MapsActivity passando as coordenadas
+                Intent intent = new Intent(ConfirmarViagem.this, MapsActivity.class);
+                intent.putExtra("ORIGEM_LAT", origemLatLng.latitude);
+                intent.putExtra("ORIGEM_LNG", origemLatLng.longitude);
+                intent.putExtra("DESTINO_LAT", destinoLatLng.latitude);
+                intent.putExtra("DESTINO_LNG", destinoLatLng.longitude);
+                intent.putExtra("ORIGEM_ENDERECO", origemEndereco);
+                intent.putExtra("DESTINO_ENDERECO", destinoEndereco);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Por favor, selecione origem e destino", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
-    private void fetchPlacePredictions(String query) {
-        // Criar a requisição para buscar previsões de lugares
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+    private void searchPlaces(String query) {
+        // Cria a requisição para o autocomplete
+        FindAutocompletePredictionsRequest predictionsRequest = FindAutocompletePredictionsRequest.builder()
+                .setSessionToken(sessionToken)
                 .setTypeFilter(TypeFilter.ADDRESS)
-                .setSessionToken(sessionToken)
                 .setQuery(query)
-                .setCountries("BR") // Limitar a resultados do Brasil
                 .build();
 
-        placesClient.findAutocompletePredictions(request)
-                .addOnSuccessListener(response -> displayPredictions(response))
-                .addOnFailureListener(e -> {
-                    if (e instanceof ApiException) {
-                        ApiException apiException = (ApiException) e;
-                        Log.e(TAG, "Place API error: " + apiException.getStatusCode() + " " + apiException.getMessage());
-                    } else {
-                        Log.e(TAG, "Unknown error: ", e);
+        // Envia a requisição
+        placesClient.findAutocompletePredictions(predictionsRequest).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                suggestionsList.removeAllViews();
+
+                List<AutocompletePrediction> predictions = task.getResult().getAutocompletePredictions();
+
+                if (predictions.size() > 0) {
+                    suggestionsList.setVisibility(View.VISIBLE);
+
+                    // Infla e adiciona cada sugestão usando o layout personalizado
+                    for (AutocompletePrediction prediction : predictions) {
+                        addPlaceItemToList(prediction);
                     }
-                });
-    }
 
-    private void displayPredictions(FindAutocompletePredictionsResponse response) {
-        // Limpar a lista de sugestões
-        suggestionsList.removeAllViews();
+                    // Adiciona opção para pesquisar em outra cidade
+                    addCustomOptionToList("Pesquisar em uma cidade diferente", null);
 
-        // Se não há sugestões, ocultar a lista
-        if (response.getAutocompletePredictions().isEmpty()) {
-            suggestionsList.setVisibility(View.GONE);
-            return;
-        }
+                    // Adiciona opção para obter mais resultados
+                    addCustomOptionToList("Obtenha mais resultados para " + query, null);
 
-        // Exibir cada sugestão como um item na lista
-        for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-            // Criar uma nova view para cada sugestão
-            View suggestionItem = getLayoutInflater().inflate(R.layout.item_place_suggestion, suggestionsList, false);
-
-            // Configurar o texto principal (nome da rua/lugar)
-            android.widget.TextView primaryText = suggestionItem.findViewById(R.id.place_primary_text);
-            primaryText.setText(prediction.getPrimaryText(null));
-
-            // Configurar o texto secundário (bairro/cidade)
-            android.widget.TextView secondaryText = suggestionItem.findViewById(R.id.place_secondary_text);
-            secondaryText.setText(prediction.getSecondaryText(null));
-
-            // Configurar o click listener
-            final String placeId = prediction.getPlaceId();
-            final String fullAddress = prediction.getPrimaryText(null) + ", " + prediction.getSecondaryText(null);
-
-            suggestionItem.setOnClickListener(v -> {
-                // Definir a flag para rastrear qual campo está sendo preenchido
-                preenchendoOrigem = origemInput.hasFocus();
-
-                // Buscar detalhes do lugar selecionado (incluindo coordenadas)
-                fetchPlaceDetails(placeId, fullAddress);
-
-                // Definir o endereço selecionado no campo de texto
-                if (origemInput.hasFocus()) {
-                    origemInput.setText(fullAddress);
-                    origemInput.clearFocus();
-                } else if (destinoInput.hasFocus()) {
-                    destinoInput.setText(fullAddress);
-                    destinoInput.clearFocus();
+                    // Adiciona opção para definir localização no mapa
+                    addCustomOptionToList("Defina a localização no mapa", null);
+                } else {
+                    suggestionsList.setVisibility(View.GONE);
                 }
-
-                // Ocultar a lista de sugestões
+            } else {
                 suggestionsList.setVisibility(View.GONE);
-            });
-
-            // Adicionar o item à lista de sugestões
-            suggestionsList.addView(suggestionItem);
-        }
-
-        // Exibir a lista de sugestões
-        suggestionsList.setVisibility(View.VISIBLE);
+                if (task.getException() != null) {
+                    task.getException().printStackTrace();
+                }
+            }
+        });
     }
 
-    private void fetchPlaceDetails(String placeId, String endereco) {
-        // Definir os campos que queremos recuperar
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG);
+    private void addPlaceItemToList(AutocompletePrediction prediction) {
+        View suggestionView = LayoutInflater.from(this).inflate(R.layout.item_place_suggestion, suggestionsList, false);
 
-        // Criar a requisição
-        FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields)
-                .setSessionToken(sessionToken)
-                .build();
+        TextView primaryText = suggestionView.findViewById(R.id.place_primary_text);
+        TextView secondaryText = suggestionView.findViewById(R.id.place_secondary_text);
 
-        // Executar a requisição
-        placesClient.fetchPlace(request)
-                .addOnSuccessListener(response -> {
-                    Place lugar = response.getPlace();
+        // Divide o texto completo em partes primária e secundária
+        String fullText = prediction.getFullText(null).toString();
+        String primaryPart;
+        String secondaryPart;
 
-                    // Usar a variável de rastreamento em vez de verificar o foco
-                    if (preenchendoOrigem) {
-                        origemPlaceId = placeId;
-                        origemEndereco = endereco;
-                        if (lugar.getLatLng() != null) {
-                            origemLat = lugar.getLatLng().latitude;
-                            origemLng = lugar.getLatLng().longitude;
-                            Log.d(TAG, "Origem: " + origemLat + ", " + origemLng);
-                        }
-                    } else {
-                        destinoPlaceId = placeId;
-                        destinoEndereco = endereco;
-                        if (lugar.getLatLng() != null) {
-                            destinoLat = lugar.getLatLng().latitude;
-                            destinoLng = lugar.getLatLng().longitude;
-                            Log.d(TAG, "Destino: " + destinoLat + ", " + destinoLng);
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (e instanceof ApiException) {
-                        ApiException apiException = (ApiException) e;
-                        Log.e(TAG, "Place details fetch error: " + apiException.getStatusCode() + " " + apiException.getMessage());
-                    } else {
-                        Log.e(TAG, "Unknown error on place details: ", e);
-                    }
-                });
+        if (fullText.contains(",")) {
+            String[] parts = fullText.split(",", 2);
+            primaryPart = parts[0].trim();
+            secondaryPart = parts[1].trim();
+        } else {
+            primaryPart = fullText;
+            secondaryPart = prediction.getSecondaryText(null).toString();
+        }
+
+        primaryText.setText(primaryPart);
+        secondaryText.setText(secondaryPart);
+
+        suggestionView.setOnClickListener(v -> handlePlaceSelection(prediction));
+
+        suggestionsList.addView(suggestionView);
+    }
+
+    private void addCustomOptionToList(String text, String iconResource) {
+        View optionView = LayoutInflater.from(this).inflate(R.layout.item_place_suggestion, suggestionsList, false);
+
+        TextView primaryText = optionView.findViewById(R.id.place_primary_text);
+        TextView secondaryText = optionView.findViewById(R.id.place_secondary_text);
+
+        primaryText.setText(text);
+        secondaryText.setVisibility(View.GONE);
+
+        // TODO: Alterar o ícone se necessário
+        // Se tiver um ícone personalizado, pode defini-lo aqui
+
+        optionView.setOnClickListener(v -> {
+            Toast.makeText(ConfirmarViagem.this, text, Toast.LENGTH_SHORT).show();
+            suggestionsList.setVisibility(View.GONE);
+        });
+
+        suggestionsList.addView(optionView);
+    }
+
+    private void handlePlaceSelection(AutocompletePrediction prediction) {
+        String placeId = prediction.getPlaceId();
+        String address = prediction.getFullText(null).toString();
+
+        // Define qual campo está recebendo o endereço
+        if (isOrigemFocused) {
+            inputOrigem.setText(address);
+            origemEndereco = address;
+            fetchPlaceDetails(placeId, true);
+        } else {
+            inputDestino.setText(address);
+            destinoEndereco = address;
+            fetchPlaceDetails(placeId, false);
+        }
+
+        // Esconde a lista de sugestões
+        suggestionsList.setVisibility(View.GONE);
+    }
+
+    private void fetchPlaceDetails(String placeId, boolean isOrigem) {
+        // Define quais campos queremos obter do lugar
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS);
+
+        // Cria a requisição
+        FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
+
+        // Envia a requisição
+        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+            Place place = response.getPlace();
+            LatLng latLng = place.getLatLng();
+
+            if (isOrigem) {
+                origemLatLng = latLng;
+            } else {
+                destinoLatLng = latLng;
+            }
+
+            // Verifica se podemos habilitar o botão de confirmar viagem
+            if (origemLatLng != null && destinoLatLng != null) {
+                btnConfirmarViagem.setEnabled(true);
+            }
+        }).addOnFailureListener((exception) -> {
+            if (exception instanceof ApiException) {
+                ApiException apiException = (ApiException) exception;
+                Toast.makeText(this, "Erro ao obter detalhes do lugar: " +
+                        apiException.getStatusCode(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
