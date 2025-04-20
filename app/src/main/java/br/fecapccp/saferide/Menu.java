@@ -48,6 +48,14 @@ public class Menu extends AppCompatActivity {
             }
         });
 
+        rideButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (Menu.this, MapsActivity.class);
+                startActivity(intent);
+            }
+        });
+
         formButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
