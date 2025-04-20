@@ -12,6 +12,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import br.fecapccp.saferide.security.CryptoUtils;
+
 public class Pagina3 extends AppCompatActivity {
 
     @Override
@@ -62,6 +64,9 @@ public class Pagina3 extends AppCompatActivity {
 
             // Obtém a análise do temperamento
             String temperamento = respostas.determinarTemperamento();
+
+            // Criptografa o objeto RespostasFormulario
+            String analise = CryptoUtils.encrypt(temperamento);
 
             // Exibir o resultado
             Intent intent = new Intent(this, Pagina4.class);

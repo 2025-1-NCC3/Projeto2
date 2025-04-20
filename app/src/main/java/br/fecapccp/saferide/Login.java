@@ -90,9 +90,10 @@ public class Login extends AppCompatActivity {
     // Método para validar login
     private boolean validarLogin(String email, String senha) {
         for (Usuario usuario : usuariosCadastrados) {
-            if (usuario.getEmail().equals(email) &&
-                    usuario.getPassword().equals(senha)) {
-                return true;
+            if (usuario.getEmail().equals(email)){
+                String salt = usuario.getSalt();
+                String hashedInput = PasswordUtils.hashPassword(senha, salt);
+                return hashedInput.equals(usuario.getPassword());
             }
         }
         return false;

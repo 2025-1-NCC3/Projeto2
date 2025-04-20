@@ -11,6 +11,8 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import br.fecapccp.saferide.security.CryptoUtils;
+
 public class Email extends AppCompatActivity {
 
     private EditText editEmail;
@@ -41,6 +43,10 @@ public class Email extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String email = editEmail.getText().toString().trim();
+
+                // Criptografa o objeto Email
+                String emailCriptografado = CryptoUtils.encrypt(email);
+
                 usuario.setEmail(email);
 
                 // Passa o objeto Usuario para a próxima atividade (Number)

@@ -18,6 +18,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.HashMap;
 
+import br.fecapccp.saferide.security.CryptoUtils;
+
 public class Number extends AppCompatActivity {
 
     private Spinner spinnerDDI;
@@ -88,6 +90,9 @@ public class Number extends AppCompatActivity {
             } else {
                 // Atualiza o objeto Usuario com o número de telefone
                 usuario.setNumber(fullPhoneNumber);
+
+                // Criptografa o objeto Number
+                String numeroCriptografado = CryptoUtils.encrypt(phone);
 
                 // Passa o objeto Usuario para a próxima atividade (Password)
                 Intent intent = new Intent(Number.this, Password.class);

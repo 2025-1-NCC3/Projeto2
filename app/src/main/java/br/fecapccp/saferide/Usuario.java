@@ -1,5 +1,7 @@
 package br.fecapccp.saferide;
 
+import com.google.gson.Gson;
+
 import java.io.Serializable;
 
 public class Usuario implements Serializable {
@@ -8,6 +10,7 @@ public class Usuario implements Serializable {
     private String email;
     private String number;
     private String password; // Adicionando o campo password
+    private String salt;
 
     // Construtor
     public Usuario(String name, String surname, String email, String number) {
@@ -57,5 +60,13 @@ public class Usuario implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public String getSalt(){ return salt; }
+    public void setSalt(String salt){ this.salt = salt; }
+    public String toJson(){
+        return new Gson().toJson(this);
+    }
+    public static Usuario fromJson(String json) {
+        return new Gson().fromJson(json, Usuario.class);
     }
 }

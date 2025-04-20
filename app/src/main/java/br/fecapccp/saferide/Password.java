@@ -55,8 +55,14 @@ public class Password extends AppCompatActivity {
             if (password.isEmpty()) {
                 Toast.makeText(Password.this, "Digite a senha!", Toast.LENGTH_SHORT).show();
             } else {
+                // Gera o salt e hash da senha
+                String salt = PasswordUtils.generateSalt();
+                String hashedPassword = PasswordUtils.hashPassword(password, salt);
+
+                usuario.setSalt(salt);
+
                 // Atualiza o objeto Usuario com a senha
-                usuario.setPassword(password);
+                usuario.setPassword(hashedPassword);
 
                 // IMPORTANTE: Adicione esta linha para cadastrar o usuário
                 Login.cadastrarUsuario(usuario);

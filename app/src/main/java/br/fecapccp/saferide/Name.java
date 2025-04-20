@@ -14,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import br.fecapccp.saferide.security.CryptoUtils;
+
 public class Name extends AppCompatActivity {
 
     private EditText editName, editSurname;
@@ -53,6 +55,11 @@ public class Name extends AppCompatActivity {
             public void onClick(View v) {
                 String name = editName.getText().toString().trim(); //Faz a conversão do text para string
                 String surname = editSurname.getText().toString().trim();
+
+                // Criptografa o nome e o sobrenome
+                String encryptedName = CryptoUtils.encrypt(name);
+                String encryptedSurname = CryptoUtils.encrypt(surname);
+
                 Usuario usuario = new Usuario(name, surname, "", ""); //Objeto usuario da classe Usuario que obtém os valores de name e surname
 
                 Intent intent = new Intent(Name.this, Email.class); //Navega de name para email ao clicar em próximo
