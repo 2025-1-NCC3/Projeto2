@@ -2,6 +2,7 @@ package br.fecapccp.saferide;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,7 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class editProfile extends AppCompatActivity {
 
-    private EditText userName, userSurname, userEmail, userNumber;
+    private EditText userName, userEmail, userNumber, userPassword;
     private Button editProfileButton, deleteProfileButton;
     private ImageView backButton;
     private Usuario usuario;
@@ -28,7 +29,6 @@ public class editProfile extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.edit_profile);
 
-        // Ajusta o padding da view principal para evitar sobreposição com as barras do sistema
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -37,87 +37,78 @@ public class editProfile extends AppCompatActivity {
 
         // Inicializa os componentes
         userName = findViewById(R.id.userName);
-        userSurname = findViewById(R.id.userSurname);
         userEmail = findViewById(R.id.userEmail);
         userNumber = findViewById(R.id.userNumber);
+        userPassword = findViewById(R.id.userPassword);
         editProfileButton = findViewById(R.id.editProfile);
         deleteProfileButton = findViewById(R.id.deleteProfile);
         backButton = findViewById(R.id.backButton);
 
+        // Mostra a senha com bolinhas
+        userPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+
         // Desabilita a edição dos campos inicialmente
         userName.setEnabled(false);
-        userSurname.setEnabled(false);
         userEmail.setEnabled(false);
         userNumber.setEnabled(false);
+        userPassword.setEnabled(false);
 
-        // Recupera o objeto Usuario passado pela atividade anterior
+        // Recupera o objeto Usuario passado pela activity anterior
         usuario = (Usuario) getIntent().getSerializableExtra("usuario");
 
         // Verifica se o objeto Usuario foi recebido corretamente
         if (usuario != null) {
-            userName.setText(usuario.getName());
-            userSurname.setText(usuario.getSurname());
+            String nomeCompleto = usuario.getName() + " " + usuario.getSurname();
+            userName.setText(nomeCompleto);
             userEmail.setText(usuario.getEmail());
             userNumber.setText(usuario.getNumber());
-
-            // Habilita o botão "Editar perfil" após carregar os dados
+            userPassword.setText(usuario.getPassword());
             editProfileButton.setEnabled(true);
         }
 
-        // Configura o listener do botão de editar perfil
-        editProfileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Habilita/desabilita a edição dos campos
-                boolean isEnabled = !userName.isEnabled();
-                userName.setEnabled(isEnabled);
-                userSurname.setEnabled(isEnabled);
-                userEmail.setEnabled(isEnabled);
-                userNumber.setEnabled(isEnabled);
+        // Botão Editar/Salvar
+        editProfileButton.setOnClickListener(v -> {
+            boolean isEnabled = !userEmail.isEnabled();
+            userEmail.setEnabled(isEnabled);
+            userNumber.setEnabled(isEnabled);
+            userPassword.setEnabled(isEnabled);
+            editProfileButton.setText(isEnabled ? "Salvar" : "Editar conta");
+            isEditing = isEnabled;
 
-                // Altera o texto do botão
-                editProfileButton.setText(isEnabled ? "Salvar" : "Editar");
-                isEditing = isEnabled;
+            if (!isEnabled) {
+                usuario.setSurname(userEmail.getText().toString().trim());
+                usuario.setNumber(userNumber.getText().toString().trim());
+                usuario.setPassword(userPassword.getText().toString().trim());
 
-                // Se estiver salvando, atualiza o objeto Usuario
-                if (!isEnabled) {
-                    usuario.setName(userName.getText().toString().trim());
-                    usuario.setSurname(userSurname.getText().toString().trim());
-                    usuario.setEmail(userEmail.getText().toString().trim());
-                    usuario.setNumber(userNumber.getText().toString().trim());
-
-                    // Aqui você pode adicionar a lógica para salvar no banco de dados
-                    Toast.makeText(editProfile.this, "Perfil atualizado", Toast.LENGTH_SHORT).show();
-                }
+                String nomeCompleto = usuario.getName() + " " + usuario.getSurname();
+                userName.setText(nomeCompleto);
+                Toast.makeText(editProfile.this, "Perfil atualizado", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Configura o listener do botão de deletar perfil
-        deleteProfileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Implementar a lógica para apagar o Perfil no banco de dados
-            }
+        // Botão Deletar
+        deleteProfileButton.setOnClickListener(v -> {
+
         });
 
-        // Configura o listener do botão de voltar
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Se estiver editando, salva as alterações automaticamente
-                if (isEditing) {
-                    usuario.setName(userName.getText().toString().trim());
-                    usuario.setSurname(userSurname.getText().toString().trim());
-                    usuario.setEmail(userEmail.getText().toString().trim());
-                    usuario.setNumber(userNumber.getText().toString().trim());
-                }
-
-                // Volta para o Menu
-                Intent intent = new Intent(editProfile.this, Menu.class);
-                intent.putExtra("usuario", usuario);
-                startActivity(intent);
-                finish(); // Finaliza a activity atual
+        // Botão Voltar
+        backButton.setOnClickListener(v -> {
+            if (isEditing) {
+                usuario.setEmail(userEmail.getText().toString().trim());
+                usuario.setNumber(userNumber.getText().toString().trim());
+                usuario.setPassword(userPassword.getText().toString().trim());
             }
+
+            Intent intent;
+            if ("Motorista".equals(usuario.getTipoConta())) {
+                intent = new Intent(editProfile.this, MenuRider.class);
+            } else {
+                intent = new Intent(editProfile.this, Menu.class);
+            }
+
+            intent.putExtra("usuario", usuario);
+            startActivity(intent);
+            finish();
         });
     }
 }

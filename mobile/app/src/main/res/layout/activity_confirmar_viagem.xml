@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFFFFF">
+
+    <!-- Toolbar ou cabeçalho -->
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#FFFFFF"
+        android:elevation="4dp"
+        android:padding="8dp">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:contentDescription="Voltar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Confirmar Viagem"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- Campos de entrada -->
+    <RelativeLayout
+        android:id="@+id/input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header"
+        android:padding="16dp">
+
+        <!-- Card dos campos -->
+        <LinearLayout
+            android:id="@+id/layout_campos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/btn_adicionar_destino"
+            android:orientation="vertical"
+            android:background="@drawable/bg_input_field"
+            android:padding="12dp">
+
+            <!-- Campo de origem -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@android:drawable/ic_menu_mylocation" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/input_origem"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:hint="Ponto de partida"
+                    android:textColor="#000000"
+                    android:textColorHint="#888888"
+                    android:inputType="text"
+                    android:completionThreshold="2"
+                    android:imeOptions="actionNext" />
+            </LinearLayout>
+
+            <!-- Divisor -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#EEEEEE"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Campo de destino -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@android:drawable/ic_menu_search" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/input_destino"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:hint="Para onde?"
+                    android:textColor="#000000"
+                    android:textColorHint="#888888"
+                    android:inputType="text"
+                    android:completionThreshold="2"
+                    android:imeOptions="actionDone" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Botão + separado -->
+        <ImageButton
+            android:id="@+id/btn_adicionar_destino"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignTop="@id/layout_campos"
+            android:layout_alignBottom="@id/layout_campos"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_round_button"
+            android:src="@android:drawable/ic_input_add"
+            android:scaleType="center"
+            android:contentDescription="Adicionar destino" />
+    </RelativeLayout>
+
+    <!-- Lista de sugestões -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_layout"
+        android:background="#FFFFFF">
+
+        <LinearLayout
+            android:id="@+id/suggestions_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" />
+    </ScrollView>
+    <!-- Adicionar este botão ao final do layout -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_confirmar_viagem"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="41dp"
+        android:layout_marginBottom="18dp"
+        android:fontFamily="@font/ubermovemedium"
+        android:backgroundTint="@color/black"
+        android:textSize="18dp"
+        app:cornerRadius="10dp"
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="24dp"
+        android:padding="12dp"
+        android:text="Confirmar Viagem"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</RelativeLayout>
