@@ -72,7 +72,7 @@ public class Name extends AppCompatActivity {
 
                 Usuario usuario = new Usuario(name, surname, "", ""); //Objeto usuario da classe Usuario que obtém os valores de name e surname
 
-                Intent intent = new Intent(Name.this, Email.class); //Navega de name para email ao clicar em próximo
+                Intent intent = new Intent(Name.this, subclasse.class); //Navega de name para email ao clicar em próximo
                 intent.putExtra("usuario", usuario); //Faz com que o usuário seja adicionado como um extra em Intent para que seja acessado por outra página por meio de Serializable
                 startActivity(intent); //Inicia a activity
             }

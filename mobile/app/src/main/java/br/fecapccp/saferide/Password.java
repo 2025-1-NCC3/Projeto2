@@ -33,28 +33,21 @@ public class Password extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.password);
 
-        // Ajusta o padding para evitar sobreposição com as barras do sistema
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Recupera o objeto Usuario passado pela atividade Number
         usuario = (Usuario) getIntent().getSerializableExtra("usuario");
 
-        // Inicializa os componentes
         editPassword = findViewById(R.id.editPassword);
         buttonNext = findViewById(R.id.next);
         buttonBack = findViewById(R.id.back);
 
-        // Desabilita o botão "Próximo" inicialmente
         buttonNext.setEnabled(false);
-
-        // Adiciona o TextWatcher ao campo de senha
         editPassword.addTextChangedListener(textWatcher);
 
-        // Configura o botão "Próximo"
         buttonNext.setOnClickListener(v -> {
             String password = editPassword.getText().toString().trim();
 
@@ -73,43 +66,47 @@ public class Password extends AppCompatActivity {
                 // Envia para o servidor
                 enviarParaServidor(hashedPassword);
 
-                // IMPORTANTE: Adicione esta linha para cadastrar o usuário
+                // Simula cadastro no sistema
                 Login.cadastrarUsuario(usuario);
 
-                // Passa o objeto Usuario para a próxima atividade (Menu)
-                Intent intent = new Intent(Password.this, Menu.class);
-                intent.putExtra("usuario", usuario);
-                startActivity(intent);
+                try {
+                    Intent intent;
+                    if ("Motorista".equals(usuario.getTipoConta())) {
+                        intent = new Intent(Password.this, MenuRider.class);
+                    } else {
+                        intent = new Intent(Password.this, Menu.class);
+                    }
+
+                    intent.putExtra("usuario", usuario);
+                    startActivity(intent);
+                    finish(); // Encerra esta tela
+                } catch (Exception e) {
+                    Toast.makeText(this, "Erro ao abrir menu: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
             }
         });
 
-        // Configura o botão "Voltar"
         buttonBack.setOnClickListener(v -> {
-            // Volta para a tela de Number
             Intent intent = new Intent(Password.this, Number.class);
+            intent.putExtra("usuario", usuario);
             startActivity(intent);
-            finish(); // Finaliza a atividade atual
+            finish();
         });
     }
 
-    // TextWatcher para validar o campo de senha
     private final TextWatcher textWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            // Não é necessário implementar
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            // Habilita o botão "Próximo" se o campo de senha não estiver vazio
             String password = editPassword.getText().toString().trim();
             buttonNext.setEnabled(!password.isEmpty());
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-            // Não é necessário implementar
-        }
+        public void afterTextChanged(Editable s) {}
     };
 
     private void enviarParaServidor(String dadosCriptografados) {

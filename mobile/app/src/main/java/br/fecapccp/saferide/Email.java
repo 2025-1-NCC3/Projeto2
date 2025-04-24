@@ -70,7 +70,7 @@ public class Email extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Volta para a tela de Name
-                Intent intent = new Intent(Email.this, Name.class);
+                Intent intent = new Intent(Email.this, Genero.class);
                 startActivity(intent);
                 finish(); // Finaliza a atividade atual para liberar memória
             }

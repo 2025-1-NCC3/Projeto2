@@ -57,11 +57,11 @@ public class Number extends AppCompatActivity {
 
         // Mapa com DDIs dos países
         final HashMap<String, String> countryCodes = new HashMap<>();
-        countryCodes.put("BRA (+55)", "55");
-        countryCodes.put("EUA (+1)", "1");
-        countryCodes.put("ARG (+54)", "54");
-        countryCodes.put("PT (+351)", "351");
-        countryCodes.put("UK (+44)", "44");
+        countryCodes.put("(+55)", "55");
+        countryCodes.put("(+1)", "1");
+        countryCodes.put("(+54)", "54");
+        countryCodes.put("(+351)", "351");
+        countryCodes.put("(+44)", "44");
 
         // Criando um array com os nomes dos países
         String[] countryArray = countryCodes.keySet().toArray(new String[0]);
