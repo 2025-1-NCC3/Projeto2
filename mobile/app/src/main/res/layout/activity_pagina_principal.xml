@@ -6,7 +6,7 @@
     android:background="@color/cinzaEscuro"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PaginaPrincipal">
+    tools:context="br.fecap.pi.saferide.PaginaPrincipal">
 
     <TextView
         android:id="@+id/textTitulo"

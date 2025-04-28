@@ -18,50 +18,50 @@
         android:theme="@style/Theme.SafeRide"
         tools:targetApi="31">
         <activity
-            android:name=".CadastrarCarro"
+            android:name="br.fecap.pi.saferide.CadastrarCarro"
             android:exported="false" />
         <activity
-            android:name=".ConfirmarViagemMotorista"
+            android:name="br.fecap.pi.saferide.ConfirmarViagemMotorista"
             android:exported="false" />
         <activity
-            android:name=".MenuRider"
+            android:name="br.fecap.pi.saferide.MenuRider"
             android:exported="false" />
         <activity
-            android:name=".subclasse"
+            android:name="br.fecap.pi.saferide.subclasse"
             android:exported="false" />
         <activity
-            android:name=".Genero"
+            android:name="br.fecap.pi.saferide.Genero"
             android:exported="false" />
         <activity
-            android:name=".ConfirmarViagem"
+            android:name="br.fecap.pi.saferide.ConfirmarViagem"
             android:exported="false" />
         <activity
-            android:name=".MapsActivity"
+            android:name="br.fecap.pi.saferide.MapsActivity"
             android:exported="false" /> <!-- ADICIONE AQUI A META-DATA -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAonm1HAxkQGlm5vpUsNmTQZ0w4HTtsHkU" />
 
         <activity
-            android:name=".Menu"
+            android:name="br.fecap.pi.saferide.Menu"
             android:exported="false" />
         <activity
-            android:name=".editProfile"
+            android:name="br.fecap.pi.saferide.editProfile"
             android:exported="false" />
         <activity
-            android:name=".Number"
+            android:name="br.fecap.pi.saferide.Number"
             android:exported="false" />
         <activity
-            android:name=".Password"
+            android:name="br.fecap.pi.saferide.Password"
             android:exported="false" />
         <activity
-            android:name=".Email"
+            android:name="br.fecap.pi.saferide.Email"
             android:exported="false" />
         <activity
-            android:name=".Name"
+            android:name="br.fecap.pi.saferide.Name"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name="br.fecap.pi.saferide.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -70,22 +70,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Pagina4"
+            android:name="br.fecap.pi.saferide.Pagina4"
             android:exported="false" />
         <activity
-            android:name=".PoliticaPrivacidade"
+            android:name="br.fecap.pi.saferide.PoliticaPrivacidade"
             android:exported="false" />
         <activity
-            android:name=".PaginaPrincipal"
+            android:name="br.fecap.pi.saferide.PaginaPrincipal"
             android:exported="true" />
         <activity
-            android:name=".Pagina3"
+            android:name="br.fecap.pi.saferide.Pagina3"
             android:exported="false" />
         <activity
-            android:name=".Pagina2"
+            android:name="br.fecap.pi.saferide.Pagina2"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="br.fecap.pi.saferide.MainActivity"
             android:exported="false" />
     </application>
 

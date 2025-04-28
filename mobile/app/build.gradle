@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'br.fecapccp.saferide'
+    namespace 'br.fecap.pi.saferide'
     compileSdk 35
 
     defaultConfig {
-        applicationId "br.fecapccp.saferide"
+        applicationId "br.fecap.pi.saferide"
         minSdk 24
         targetSdk 35
         versionCode 1
