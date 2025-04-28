@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/cinzaEscuro"
-    tools:context=".Pagina4">
+    tools:context="br.fecap.pi.saferide.Pagina4">
 
     <TextView
         android:id="@+id/textResultadoMensagem"
