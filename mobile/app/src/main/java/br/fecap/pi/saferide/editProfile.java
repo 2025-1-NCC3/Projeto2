@@ -3,6 +3,7 @@ package br.fecap.pi.saferide;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,7 +15,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import br.fecap.pi.saferide.R;
+import br.fecap.pi.saferide.security.CryptoUtils;
 
 public class editProfile extends AppCompatActivity {
 
@@ -77,12 +87,40 @@ public class editProfile extends AppCompatActivity {
             isEditing = isEnabled;
 
             if (!isEnabled) {
-                usuario.setSurname(userEmail.getText().toString().trim());
-                usuario.setNumber(userNumber.getText().toString().trim());
-                usuario.setPassword(userPassword.getText().toString().trim());
+                // Obtém os novos dados
+                String novoEmail = userEmail.getText().toString().trim();
+                String novoNumero = userNumber.getText().toString().trim();
+                String novaSenha = userPassword.getText().toString().trim();
+
+                // Criptografa os dados
+                String emailCriptografado = CryptoUtils.encrypt(novoEmail);
+                String numeroCriptografado = CryptoUtils.encrypt(novoNumero);
+                String senhaCriptografada = CryptoUtils.encrypt(novaSenha);
+
+                // Cria o JSON para envio
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("id", usuario.getId()); // importante: identificar qual usuário está sendo alterado
+                    jsonObject.put("email", emailCriptografado);
+                    jsonObject.put("numero", numeroCriptografado);
+                    jsonObject.put("senha", senhaCriptografada);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                // Envia os dados
+                enviarParaServidor(jsonObject.toString());
+
+                // Atualiza os dados locais (opcional)
+                usuario.setEmail(novoEmail);
+                usuario.setNumber(novoNumero);
+                usuario.setPassword(novaSenha);
 
                 String nomeCompleto = usuario.getName() + " " + usuario.getSurname();
                 userName.setText(nomeCompleto);
+
                 Toast.makeText(editProfile.this, "Perfil atualizado", Toast.LENGTH_SHORT).show();
             }
         });
@@ -111,5 +149,31 @@ public class editProfile extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+    private void enviarParaServidor(String dadosCriptografados) {
+        String url = ""; // URL da API
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    Log.d("API", "Resposta: " + response);
+                },
+                error -> {
+                    Log.e("API", "Erro: ", error);
+                }
+        ) {
+            @Override
+            public byte[] getBody() {
+                return dadosCriptografados.getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json"; // Envio do JSON
+            }
+        };
+
+        queue.add(stringRequest);
     }
 }

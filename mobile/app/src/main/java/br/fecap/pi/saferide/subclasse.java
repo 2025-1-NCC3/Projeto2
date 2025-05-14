@@ -2,6 +2,7 @@ package br.fecap.pi.saferide;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -10,9 +11,17 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.button.MaterialButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import br.fecap.pi.saferide.R;
+import br.fecap.pi.saferide.security.CryptoUtils;
 
 public class subclasse extends AppCompatActivity {
 
@@ -60,6 +69,21 @@ public class subclasse extends AppCompatActivity {
                     return;
                 }
                 usuario.setCnh(cnh);
+
+                // Aplica a criptografia para a CNH
+                String encriptedCnh = CryptoUtils.encrypt(cnh);
+
+                // Monta o JSON
+                JSONObject json = new JSONObject();
+                try{
+                    json.put("cnh", encriptedCnh);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                // Envia para o servidor
+                enviarParaServidor(json.toString());
+
             } else if ("Passageiro".equals(usuario.getTipoConta())) {
                 String cpf = editCPF.getText().toString().trim();
                 if (cpf.isEmpty()) {
@@ -67,6 +91,21 @@ public class subclasse extends AppCompatActivity {
                     return;
                 }
                 usuario.setCpf(cpf);
+
+                // Aplica a criptografia para a CNH
+                String encriptedCpf = CryptoUtils.encrypt(cpf);
+
+                // Monta o JSON
+                JSONObject json = new JSONObject();
+                try{
+                    json.put("cpf", encriptedCpf);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                // Envia para o servidor
+                enviarParaServidor(json.toString());
+
             } else {
                 Toast.makeText(this, "Selecione Motorista ou Passageiro", Toast.LENGTH_SHORT).show();
                 return;
@@ -79,5 +118,31 @@ public class subclasse extends AppCompatActivity {
         });
 
         backButton.setOnClickListener(v -> finish());
+    }
+
+    private void enviarParaServidor(String dadosCriptografados) {
+        String url = ""; // URL da API
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    Log.d("API", "Resposta: " + response);
+                },
+                error -> {
+                    Log.e("API", "Erro: ", error);
+                }
+        ) {
+            @Override
+            public byte[] getBody() {
+                return dadosCriptografados.getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json"; // Envio do JSON
+            }
+        };
+
+        queue.add(stringRequest);
     }
 }
