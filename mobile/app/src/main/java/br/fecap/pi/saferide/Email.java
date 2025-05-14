@@ -60,6 +60,7 @@ public class Email extends AppCompatActivity {
                 // Monta o JSON
                 JSONObject json = new JSONObject();
                 try{
+                    json.put("id", getId());
                     json.put("email", emailCriptografado);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);

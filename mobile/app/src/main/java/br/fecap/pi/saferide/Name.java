@@ -73,6 +73,7 @@ public class Name extends AppCompatActivity {
                 // Monta o JSON
                 JSONObject json = new JSONObject();
                 try{
+                    json.put("id", getId());
                     json.put("nome", nomeCriptografado);
                     json.put("sobrenome", sobrenomeCriptografado);
                 } catch (JSONException e) {

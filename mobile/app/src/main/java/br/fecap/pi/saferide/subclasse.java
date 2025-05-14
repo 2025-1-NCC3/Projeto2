@@ -76,6 +76,7 @@ public class subclasse extends AppCompatActivity {
                 // Monta o JSON
                 JSONObject json = new JSONObject();
                 try{
+                    json.put("id", getId());
                     json.put("cnh", encriptedCnh);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -98,6 +99,7 @@ public class subclasse extends AppCompatActivity {
                 // Monta o JSON
                 JSONObject json = new JSONObject();
                 try{
+                    json.put("id", getId());
                     json.put("cpf", encriptedCpf);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);

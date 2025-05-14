@@ -70,6 +70,7 @@ public class Password extends AppCompatActivity {
                 // Monta o JSON
                 JSONObject json = new JSONObject();
                 try{
+                    json.put("id", getId());
                     json.put("senha", hashedPassword);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);

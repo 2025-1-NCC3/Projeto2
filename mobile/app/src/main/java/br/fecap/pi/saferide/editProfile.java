@@ -100,7 +100,7 @@ public class editProfile extends AppCompatActivity {
                 // Cria o JSON para envio
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("id", usuario.getId()); // importante: identificar qual usuário está sendo alterado
+                    jsonObject.put("id", usuario.getId()); // identificar qual usuário está sendo alterado
                     jsonObject.put("email", emailCriptografado);
                     jsonObject.put("numero", numeroCriptografado);
                     jsonObject.put("senha", senhaCriptografada);

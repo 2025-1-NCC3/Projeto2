@@ -107,7 +107,6 @@ public class CadastrarCarro extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-
         // Envia para o servidor
         enviarParaServidor(json.toString());
 

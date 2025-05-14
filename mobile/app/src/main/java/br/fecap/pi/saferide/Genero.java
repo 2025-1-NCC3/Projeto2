@@ -82,6 +82,7 @@ public class Genero extends AppCompatActivity {
             // Monta o JSON
             JSONObject json = new JSONObject();
             try{
+                json.put("id", getId());
                 json.put("genero", generoCriptografado);
             } catch (JSONException e) {
                 throw new RuntimeException(e);

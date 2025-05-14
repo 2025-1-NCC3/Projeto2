@@ -81,6 +81,7 @@ public class Pagina3 extends AppCompatActivity {
             // Monta o JSON
             JSONObject json = new JSONObject();
             try{
+                json.put("id", getId());
                 json.put("analise", analiseCriptografada);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
