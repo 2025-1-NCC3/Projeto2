@@ -17,6 +17,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import br.fecap.pi.saferide.security.CryptoUtils;
 import br.fecap.pi.saferide.R;
 
@@ -54,8 +57,17 @@ public class Email extends AppCompatActivity {
                 // Criptografa o objeto Email
                 String emailCriptografado = CryptoUtils.encrypt(email);
 
+                // Monta o JSON
+                JSONObject json = new JSONObject();
+                try{
+                    json.put("id", getId());
+                    json.put("email", emailCriptografado);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
                 // Envia para o servidor
-                enviarParaServidor(emailCriptografado);
+                enviarParaServidor(json.toString());
 
                 usuario.setEmail(email);
 
@@ -102,8 +114,7 @@ public class Email extends AppCompatActivity {
     }
 
     private void enviarParaServidor(String dadosCriptografados) {
-        // Nossa URL para as Requests
-        String url = "";
+        String url = ""; // URL da API
 
         RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -116,14 +127,12 @@ public class Email extends AppCompatActivity {
         ) {
             @Override
             public byte[] getBody() {
-                // Envia o JSON criptografado
                 return dadosCriptografados.getBytes();
             }
 
             @Override
             public String getBodyContentType() {
-                // ou "application/json" se o backend esperar JSON
-                return "text/plain";
+                return "application/json"; // Envio do JSON
             }
         };
 

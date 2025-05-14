@@ -20,6 +20,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import br.fecap.pi.saferide.R;
 
 public class Password extends AppCompatActivity {
@@ -64,8 +67,17 @@ public class Password extends AppCompatActivity {
                 // Atualiza o objeto Usuario com a senha
                 usuario.setPassword(hashedPassword);
 
+                // Monta o JSON
+                JSONObject json = new JSONObject();
+                try{
+                    json.put("id", getId());
+                    json.put("senha", hashedPassword);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
                 // Envia para o servidor
-                enviarParaServidor(hashedPassword);
+                enviarParaServidor(json.toString());
 
                 // Simula cadastro no sistema
                 Login.cadastrarUsuario(usuario);
@@ -111,8 +123,7 @@ public class Password extends AppCompatActivity {
     };
 
     private void enviarParaServidor(String dadosCriptografados) {
-        // Nossa URL para as Requests
-        String url = "";
+        String url = ""; // URL da API
 
         RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -125,14 +136,12 @@ public class Password extends AppCompatActivity {
         ) {
             @Override
             public byte[] getBody() {
-                // Envia o JSON criptografado
                 return dadosCriptografados.getBytes();
             }
 
             @Override
             public String getBodyContentType() {
-                // ou "application/json" se o backend esperar JSON
-                return "text/plain";
+                return "application/json"; // Envio do JSON
             }
         };
 

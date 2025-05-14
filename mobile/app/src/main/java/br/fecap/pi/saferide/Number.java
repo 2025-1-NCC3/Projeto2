@@ -22,6 +22,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 import br.fecap.pi.saferide.security.CryptoUtils;
@@ -101,8 +104,17 @@ public class Number extends AppCompatActivity {
                 // Criptografa o objeto Number
                 String numeroCriptografado = CryptoUtils.encrypt(phone);
 
+                // Monta o JSON
+                JSONObject json = new JSONObject();
+                try{
+                    json.put("id", getId());
+                    json.put("numero", numeroCriptografado);
+                }  catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
                 // Envia para o servidor
-                enviarParaServidor(numeroCriptografado);
+                enviarParaServidor(json.toString());
 
                 // Passa o objeto Usuario para a próxima atividade (Password)
                 Intent intent = new Intent(Number.this, Password.class);
@@ -121,8 +133,7 @@ public class Number extends AppCompatActivity {
     }
 
     private void enviarParaServidor(String dadosCriptografados) {
-        // Nossa URL para as Requests
-        String url = "";
+        String url = ""; // URL da API
 
         RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -135,14 +146,12 @@ public class Number extends AppCompatActivity {
         ) {
             @Override
             public byte[] getBody() {
-                // Envia o JSON criptografado
                 return dadosCriptografados.getBytes();
             }
 
             @Override
             public String getBodyContentType() {
-                // ou "application/json" se o backend esperar JSON
-                return "text/plain";
+                return "application/json"; // Envio do JSON
             }
         };
 

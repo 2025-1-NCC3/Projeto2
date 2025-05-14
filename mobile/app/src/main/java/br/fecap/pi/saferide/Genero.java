@@ -2,6 +2,7 @@ package br.fecap.pi.saferide;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,9 +14,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.button.MaterialButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import br.fecap.pi.saferide.R;
+import br.fecap.pi.saferide.security.CryptoUtils;
 
 public class Genero extends AppCompatActivity {
 
@@ -67,6 +76,21 @@ public class Genero extends AppCompatActivity {
         buttonNext.setOnClickListener(v -> {
             usuario.setGenero(selectedGender); // salva o gênero no objeto Usuario
 
+            // Criptografa o objeto Gênero
+            String generoCriptografado = CryptoUtils.encrypt(selectedGender);
+
+            // Monta o JSON
+            JSONObject json = new JSONObject();
+            try{
+                json.put("id", getId());
+                json.put("genero", generoCriptografado);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
+            // Envia para o servidor
+            enviarParaServidor(json.toString());
+
             // Redireciona para a próxima tela, passando o objeto atualizado
             Intent intent = new Intent(Genero.this, Email.class); // Troque "ProximaTela.class" pela sua Activity real
             intent.putExtra("usuario", usuario);
@@ -77,5 +101,31 @@ public class Genero extends AppCompatActivity {
         buttonBack.setOnClickListener(v -> {
             finish(); // Finaliza a activity atual e volta para anterior
         });
+    }
+
+    private void enviarParaServidor(String dadosCriptografados) {
+        String url = ""; // URL da API
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    Log.d("API", "Resposta: " + response);
+                },
+                error -> {
+                    Log.e("API", "Erro: ", error);
+                }
+        ) {
+            @Override
+            public byte[] getBody() {
+                return dadosCriptografados.getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json"; // Envio do JSON
+            }
+        };
+
+        queue.add(stringRequest);
     }
 }
