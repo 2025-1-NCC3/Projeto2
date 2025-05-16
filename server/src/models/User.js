@@ -23,6 +23,13 @@ export default function (sequelize) {
       type: DataTypes.DATE,
       allowNull: false,
     },
+    surname: { type: DataTypes.STRING },
+    genero: { type: DataTypes.STRING },
+    tipoConta: { type: DataTypes.STRING },
+    cpf: { type: DataTypes.STRING },
+    cnh: { type: DataTypes.STRING },
+    carro: { type: DataTypes.JSON },
+    salt: { type: DataTypes.STRING },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -34,13 +41,6 @@ export default function (sequelize) {
     tableName: 'users',
     timestamps: true,
   });
-
-  User.associate = function (models) {
-    User.hasMany(models.Survey, {
-      foreignKey: 'userId',
-      as: 'surveys',
-    });
-  };
 
   User.beforeCreate(async (user) => {
     const hashedPassword = await bcrypt.hash(user.password, 10);

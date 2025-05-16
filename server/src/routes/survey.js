@@ -1,9 +1,8 @@
 import { Router } from 'express';
-import surveyController from '../controllers/surveyController.js';
+import { create } from '../controllers/surveyController.js';
+import authMiddleware from '../middlewares/auth.js';
 
 const router = Router();
-
-router.post("/surveys", surveyController.create);
-router.get("/surveys", surveyController.getAllByUser);
-
+router.use(authMiddleware);
+router.post('/', create);
 export default router;
