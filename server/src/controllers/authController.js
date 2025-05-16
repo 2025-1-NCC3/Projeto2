@@ -11,7 +11,7 @@ const sanitizeUser = (user) => {
 export default {
     async signup(req, res) {
         try {
-            const { name, email, phone, birthday, password } = req.body;
+            const { name, email, phone, birthday, genero, tipoConta, cpf, cnh, salt, password } = req.body;
 
             const existingUser = await models.User.findOne({ where: { email } });
             if (existingUser) {
@@ -23,6 +23,11 @@ export default {
                 email,
                 phone,
                 birthday,
+                genero,
+                tipoConta,
+                cpf,
+                cnh,
+                salt,
                 password
             });
 

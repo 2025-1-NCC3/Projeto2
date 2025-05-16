@@ -1,40 +1,14 @@
 import { DataTypes } from 'sequelize';
 
-export default function (sequelize) {
+export default (sequelize) => {
   const Survey = sequelize.define('Survey', {
-    questionId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Questions',
-        key: 'id',
-      },
-    },
-    answer: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Users',
-        key: 'id',
-      },
-    },
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    userId: { type: DataTypes.INTEGER, allowNull: false },
+    questionId: { type: DataTypes.INTEGER, allowNull: false },
+    answer: { type: DataTypes.ENUM('sim', 'não'), allowNull: false }
   });
-
-  Survey.associate = function (models) {
-    Survey.belongsTo(models.User, {
-      foreignKey: 'userId',
-      as: 'user',
-    });
-
-    Survey.belongsTo(models.Question, {
-      foreignKey: 'questionId',
-      as: 'question',
-    });
-  };
-
+  // sem associação com Question
+  Survey.removeAttribute('updatedAt');
+  Survey.removeAttribute('createdAt');
   return Survey;
-}
+};
