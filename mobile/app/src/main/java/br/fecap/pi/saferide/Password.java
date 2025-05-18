@@ -70,7 +70,7 @@ public class Password extends AppCompatActivity {
                 // Monta o JSON
                 JSONObject json = new JSONObject();
                 try{
-                    json.put("id", getId());
+                    json.put("id", getId()); // Usando o método getId() adicionado
                     json.put("senha", hashedPassword);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -106,6 +106,14 @@ public class Password extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+    // Método para obter o ID do usuário (adicionado para resolver o problema)
+    private int getId() {
+        if (usuario != null) {
+            return usuario.getId();
+        }
+        return -1; // Valor padrão caso o usuário não esteja disponível
     }
 
     private final TextWatcher textWatcher = new TextWatcher() {

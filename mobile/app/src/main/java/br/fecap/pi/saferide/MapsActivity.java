@@ -1,23 +1,30 @@
+
 package br.fecap.pi.saferide;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.widget.NestedScrollView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,6 +35,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 
@@ -59,12 +67,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final double UBERX_PRECO_KM = 2.14;
     private static final double UBERBLACK_PRECO_BASE = 7.5;
     private static final double UBERBLACK_PRECO_KM = 2.87;
+    private static final double UBERGREEN_PRECO_BASE = 5.0;
+    private static final double UBERGREEN_PRECO_KM = 2.14;
     private static final double WOMENS_MODE_TAXA = 1.1;
 
-    private MaterialButton uberXButton;
-    private MaterialButton uberBlackButton;
-    private Chip chipWomen;
+    // Cores para o switch
+    private static final String SWITCH_THUMB_ACTIVE_COLOR = "#E91E63";    // Rosa vibrante quando ativo
+    private static final String SWITCH_TRACK_ACTIVE_COLOR = "#80E91E63";   // Rosa semi-transparente quando ativo
+    private static final String SWITCH_THUMB_INACTIVE_COLOR = "#AAAAAA";  // Cinza esmaecido quando inativo
+    private static final String SWITCH_TRACK_INACTIVE_COLOR = "#80AAAAAA"; // Cinza semi-transparente quando inativo
+
+    // Novos elementos de UI
+    private LinearLayout uberXOption;
+    private LinearLayout uberBlackOption;
+    private LinearLayout uberGreenOption;
+    private TextView uberXPrice;
+    private TextView uberBlackPrice;
+    private TextView uberGreenPrice;
+
+    private SwitchCompat switchWomen;
     private ImageView backButton;
+    private NestedScrollView bottomSheet;
+    private BottomSheetBehavior<NestedScrollView> bottomSheetBehavior;
 
     private double distanciaEmKm = 0;
     private boolean corridaConfirmada = false;
@@ -83,18 +107,75 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         initViews();
+        setupBottomSheet();
         restoreInstanceState(savedInstanceState);
         setupUsuario();
-        setupButtons();
+        setupClickListeners();
         getIntentData();
         setupMapFragment();
     }
 
     private void initViews() {
-        uberXButton = findViewById(R.id.uberXButton);
-        uberBlackButton = findViewById(R.id.uberBlackButton);
-        chipWomen = findViewById(R.id.chipWomen);
+        // Bottom sheet e elementos internos
+        bottomSheet = findViewById(R.id.bottomSheet);
+        uberXOption = findViewById(R.id.uberXOption);
+        uberBlackOption = findViewById(R.id.uberBlackOption);
+        uberGreenOption = findViewById(R.id.uberGreenOption);
+
+        // TextViews para preços
+        uberXPrice = findViewById(R.id.uberXPrice); // Você precisará adicionar IDs aos TextViews no XML
+        uberBlackPrice = findViewById(R.id.uberBlackPrice);
+        uberGreenPrice = findViewById(R.id.uberGreenPrice);
+
+        // Outros elementos
+        switchWomen = findViewById(R.id.switchWomen);
+
+        // Configurando cores do switch
+        setSwitchColors(switchWomen, false);
+
         backButton = findViewById(R.id.backButton);
+    }
+
+    /**
+     * Define as cores do switch com base no estado (ativado/desativado)
+     * @param switchView O switch a ser colorido
+     * @param isChecked Se o switch está ativado ou não
+     */
+    private void setSwitchColors(SwitchCompat switchView, boolean isChecked) {
+        if (isChecked) {
+            // Cores quando ativado
+            switchView.setThumbTintList(ColorStateList.valueOf(Color.parseColor(SWITCH_THUMB_ACTIVE_COLOR)));
+            switchView.setTrackTintList(ColorStateList.valueOf(Color.parseColor(SWITCH_TRACK_ACTIVE_COLOR)));
+        } else {
+            // Cores esmaecidas quando desativado
+            switchView.setThumbTintList(ColorStateList.valueOf(Color.parseColor(SWITCH_THUMB_INACTIVE_COLOR)));
+            switchView.setTrackTintList(ColorStateList.valueOf(Color.parseColor(SWITCH_TRACK_INACTIVE_COLOR)));
+        }
+    }
+
+    private void setupBottomSheet() {
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        // Definir a altura do peek com base na altura da tela
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenHeight = displayMetrics.heightPixels;
+        // Definir como aproximadamente 40% da altura da tela
+        int peekHeight = (int) (screenHeight * 0.4);
+        bottomSheetBehavior.setPeekHeight(peekHeight);
+
+        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                // Pode adicionar comportamentos específicos para diferentes estados se necessário
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // Animações durante o deslize do bottomSheet se necessário
+            }
+        });
     }
 
     private void restoreInstanceState(Bundle savedInstanceState) {
@@ -108,13 +189,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         configureWomenModeVisibility();
     }
 
-    private void setupButtons() {
+    private void setupClickListeners() {
         if (backButton != null) {
             backButton.setOnClickListener(v -> onBackPressed());
         }
 
-        uberXButton.setOnClickListener(v -> handleUberXClick());
-        uberBlackButton.setOnClickListener(v -> handleUberBlackClick());
+        uberXOption.setOnClickListener(v -> handleUberXClick());
+        uberBlackOption.setOnClickListener(v -> handleUberBlackClick());
+        uberGreenOption.setOnClickListener(v -> handleUberGreenClick());
     }
 
     private void handleUberXClick() {
@@ -122,7 +204,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             corridaConfirmada = true;
             String preco = calcularPrecoUberX();
             confirmarViagem("UberX", preco);
-            disableButtons();
+            disableOptions();
         }
     }
 
@@ -131,13 +213,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             corridaConfirmada = true;
             String preco = calcularPrecoUberBlack();
             confirmarViagem("UberBlack", preco);
-            disableButtons();
+            disableOptions();
         }
     }
 
-    private void disableButtons() {
-        uberXButton.setEnabled(false);
-        uberBlackButton.setEnabled(false);
+    private void handleUberGreenClick() {
+        if (!corridaConfirmada) {
+            corridaConfirmada = true;
+            String preco = calcularPrecoUberGreen();
+            confirmarViagem("Uber Green", preco);
+            disableOptions();
+        }
+    }
+
+    private void disableOptions() {
+        uberXOption.setEnabled(false);
+        uberXOption.setAlpha(0.5f);
+        uberBlackOption.setEnabled(false);
+        uberBlackOption.setAlpha(0.5f);
+        uberGreenOption.setEnabled(false);
+        uberGreenOption.setAlpha(0.5f);
     }
 
     private void getIntentData() {
@@ -206,18 +301,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void configureWomenModeVisibility() {
         if (usuarioAtual != null && "Feminino".equalsIgnoreCase(usuarioAtual.getGenero())) {
-            chipWomen.setVisibility(View.VISIBLE);
-            chipWomen.setChecked(womenOnlyMode);
+            switchWomen.setVisibility(View.VISIBLE);
+            switchWomen.setChecked(womenOnlyMode);
 
-            chipWomen.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Ajustar as cores iniciais com base no estado atual
+            setSwitchColors(switchWomen, womenOnlyMode);
+
+            switchWomen.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 womenOnlyMode = isChecked;
                 showModeToast(isChecked);
+                // Atualizar cores do switch quando o estado muda
+                setSwitchColors(switchWomen, isChecked);
                 if (distanciaEmKm > 0) {
-                    atualizarPrecosNaBotoes();
+                    atualizarPrecos();
                 }
             });
         } else {
-            chipWomen.setVisibility(View.GONE);
+            switchWomen.setVisibility(View.GONE);
             womenOnlyMode = false;
         }
     }
@@ -247,8 +347,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void handleConfirmationError() {
         Toast.makeText(this, "Erro ao confirmar viagem. Tente novamente.", Toast.LENGTH_SHORT).show();
         corridaConfirmada = false;
-        uberXButton.setEnabled(true);
-        uberBlackButton.setEnabled(true);
+        uberXOption.setEnabled(true);
+        uberXOption.setAlpha(1.0f);
+        uberBlackOption.setEnabled(true);
+        uberBlackOption.setAlpha(1.0f);
+        uberGreenOption.setEnabled(true);
+        uberGreenOption.setAlpha(1.0f);
     }
 
     private class TripConfirmationTask extends AsyncTask<String, Void, Void> {
@@ -281,6 +385,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setupMapFeatures();
         addMarkers();
         adjustCamera();
+
+        // Iniciar a busca de direções imediatamente após o mapa estar pronto
         new DirectionsTask().execute();
     }
 
@@ -311,15 +417,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void adjustCamera() {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        builder.include(origemLatLng);
-        builder.include(destinoLatLng);
-        final LatLngBounds bounds = builder.build();
-
         try {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(origemLatLng);
+            builder.include(destinoLatLng);
+            final LatLngBounds bounds = builder.build();
+
+            int padding = 120; // offset from edges of the map in pixels
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
         } catch (Exception e) {
             Log.e(TAG, "Erro ao mover câmera: " + e.getMessage(), e);
+            // Fallback para caso o cálculo de bounds falhe
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origemLatLng, 12));
         }
     }
@@ -329,6 +437,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         protected String doInBackground(Void... voids) {
             try {
                 String url = getDirectionsUrl(origemLatLng, destinoLatLng);
+                Log.d(TAG, "URL de direções: " + url);
                 return downloadUrl(url);
             } catch (Exception e) {
                 Log.e(TAG, "Erro ao obter direções", e);
@@ -339,25 +448,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected void onPostExecute(String data) {
             if (data == null || data.isEmpty()) {
+                Log.e(TAG, "Dados de direções vazios ou nulos");
                 Toast.makeText(MapsActivity.this,
                         "Não foi possível obter dados da rota", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            Log.d(TAG, "Dados recebidos: " + data.substring(0, Math.min(data.length(), 200)) + "...");
             parseDirectionsData(data);
         }
     }
 
     private String getDirectionsUrl(LatLng origin, LatLng dest) {
-        return "https://maps.googleapis.com/maps/api/directions/json?" +
-                "origin=" + origin.latitude + "," + origin.longitude +
-                "&destination=" + dest.latitude + "," + dest.longitude +
-                "&mode=driving" +
-                "&key=" + getString(R.string.google_maps_key);
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String mode = "mode=driving";
+        String parameters = str_origin + "&" + str_dest + "&" + mode + "&key=" + getString(R.string.google_maps_key);
+        String url = "https://maps.googleapis.com/maps/api/directions/json?" + parameters;
+
+        Log.d(TAG, "Requesting directions URL: " + url);
+        return url;
     }
 
     private String downloadUrl(String strUrl) throws IOException {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
+        StringBuilder stringBuilder = new StringBuilder();
+
         try {
             URL url = new URL(strUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -365,20 +482,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             urlConnection.setReadTimeout(15000);
             urlConnection.connect();
 
-            if (urlConnection.getResponseCode() != 200) {
+            int responseCode = urlConnection.getResponseCode();
+            Log.d(TAG, "HTTP Response Code: " + responseCode);
+
+            if (responseCode != 200) {
+                Log.e(TAG, "HTTP Error: " + responseCode);
                 return null;
             }
 
             InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line);
+            if (inputStream == null) {
+                Log.e(TAG, "Input stream is null");
+                return null;
             }
 
-            return buffer.toString();
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append("\n");
+            }
+
+            if (stringBuilder.length() == 0) {
+                Log.e(TAG, "Stream was empty");
+                return null;
+            }
+
+            return stringBuilder.toString();
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -387,7 +517,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    Log.e(TAG, "Erro ao fechar stream", e);
+                    Log.e(TAG, "Error closing stream", e);
                 }
             }
         }
@@ -396,43 +526,63 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void parseDirectionsData(String data) {
         try {
             JSONObject jsonObject = new JSONObject(data);
+            String status = jsonObject.getString("status");
 
-            if (!jsonObject.getString("status").equals("OK")) {
-                handleApiError(jsonObject);
+            Log.d(TAG, "Directions API status: " + status);
+
+            if (!status.equals("OK")) {
+                String errorMsg = jsonObject.has("error_message") ?
+                        jsonObject.getString("error_message") : "Status: " + status;
+                Log.e(TAG, "API Error: " + errorMsg);
+                Toast.makeText(this, "Erro na API de direções: " + status, Toast.LENGTH_SHORT).show();
                 return;
             }
 
             JSONArray routes = jsonObject.getJSONArray("routes");
-            if (routes.length() > 0) {
-                processRouteData(routes.getJSONObject(0));
+
+            if (routes.length() == 0) {
+                Log.e(TAG, "Nenhuma rota encontrada");
+                Toast.makeText(this, "Nenhuma rota encontrada", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            // Processar a primeira rota encontrada
+            processRouteData(routes.getJSONObject(0));
+
         } catch (Exception e) {
             Log.e(TAG, "Erro ao analisar dados de direções", e);
             Toast.makeText(this, "Erro ao processar dados da rota", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void handleApiError(JSONObject jsonObject) throws Exception {
-        String status = jsonObject.getString("status");
-        String errorMsg = jsonObject.has("error_message") ?
-                jsonObject.getString("error_message") : "Status: " + status;
-        Log.e(TAG, "Erro na API: " + errorMsg);
-        Toast.makeText(this, "Erro na API: " + status, Toast.LENGTH_SHORT).show();
-    }
-
     private void processRouteData(JSONObject route) throws Exception {
+        // Obter o polyline da rota
         JSONObject overviewPolyline = route.getJSONObject("overview_polyline");
         String encodedPath = overviewPolyline.getString("points");
+        Log.d(TAG, "Encoded Path: " + encodedPath);
 
+        // Decodificar o polyline em uma lista de coordenadas
         List<LatLng> decodedPath = decodePoly(encodedPath);
-        if (!decodedPath.isEmpty()) {
-            mMap.addPolyline(new PolylineOptions()
+
+        if (decodedPath.isEmpty()) {
+            Log.e(TAG, "Lista de pontos decodificada está vazia");
+            return;
+        }
+
+        Log.d(TAG, "Desenhando polyline com " + decodedPath.size() + " pontos");
+
+        // Desenhar a polyline no mapa
+        runOnUiThread(() -> {
+            PolylineOptions options = new PolylineOptions()
                     .addAll(decodedPath)
                     .width(12)
                     .color(Color.BLUE)
-                    .geodesic(true));
-        }
+                    .geodesic(true);
 
+            mMap.addPolyline(options);
+        });
+
+        // Processar informações de distância e duração
         JSONArray legs = route.getJSONArray("legs");
         if (legs.length() > 0) {
             processLegData(legs.getJSONObject(0));
@@ -446,10 +596,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         String distance = leg.getJSONObject("distance").getString("text");
         String duration = leg.getJSONObject("duration").getString("text");
 
-        atualizarPrecosNaBotoes();
+        Log.d(TAG, "Distância: " + distance + ", Tempo: " + duration);
 
-        Toast.makeText(this, "Distância: " + distance + ", Tempo: " + duration,
-                Toast.LENGTH_LONG).show();
+        runOnUiThread(() -> {
+            atualizarPrecos();
+            Toast.makeText(MapsActivity.this,
+                    "Distância: " + distance + ", Tempo: " + duration,
+                    Toast.LENGTH_LONG).show();
+        });
     }
 
     private String calcularPrecoUberX() {
@@ -468,20 +622,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return formatarPreco(precoTotal);
     }
 
+    private String calcularPrecoUberGreen() {
+        double precoTotal = UBERGREEN_PRECO_BASE + (UBERGREEN_PRECO_KM * distanciaEmKm);
+        if (womenOnlyMode) {
+            precoTotal *= WOMENS_MODE_TAXA;
+        }
+        return formatarPreco(precoTotal);
+    }
+
     private String formatarPreco(double preco) {
         return new DecimalFormat("0.00").format(preco);
     }
 
-    private void atualizarPrecosNaBotoes() {
+    private void atualizarPrecos() {
         String precoUberX = calcularPrecoUberX();
         String precoUberBlack = calcularPrecoUberBlack();
+        String precoUberGreen = calcularPrecoUberGreen();
 
-        uberXButton.setText("UberX - R$ " + precoUberX);
-        uberBlackButton.setText("UberBlack - R$ " + precoUberBlack);
-
-        String descricao = womenOnlyMode ? " com motorista mulher" : "";
-        uberXButton.setContentDescription("UberX" + descricao + " - R$ " + precoUberX);
-        uberBlackButton.setContentDescription("UberBlack" + descricao + " - R$ " + precoUberBlack);
+        // Atualiza os textos de preço nos TextViews com o símbolo R$ para corresponder ao layout
+        uberXPrice.setText("R$ " + precoUberX);
+        uberBlackPrice.setText("R$ " + precoUberBlack);
+        uberGreenPrice.setText("R$ " + precoUberGreen);
     }
 
     private List<LatLng> decodePoly(String encoded) {
@@ -489,27 +650,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         int index = 0, len = encoded.length();
         int lat = 0, lng = 0;
 
-        while (index < len) {
-            int b, shift = 0, result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lat += dlat;
+        try {
+            while (index < len) {
+                int b, shift = 0, result = 0;
+                do {
+                    b = encoded.charAt(index++) - 63;
+                    result |= (b & 0x1f) << shift;
+                    shift += 5;
+                } while (b >= 0x20);
+                int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                lat += dlat;
 
-            shift = 0;
-            result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lng += dlng;
+                shift = 0;
+                result = 0;
+                do {
+                    b = encoded.charAt(index++) - 63;
+                    result |= (b & 0x1f) << shift;
+                    shift += 5;
+                } while (b >= 0x20);
+                int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                lng += dlng;
 
-            poly.add(new LatLng((lat / 1E5), (lng / 1E5)));
+                LatLng p = new LatLng((lat / 1E5), (lng / 1E5));
+                poly.add(p);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error decoding polyline", e);
         }
 
         return poly;

@@ -103,7 +103,6 @@ public class CadastrarCarro extends AppCompatActivity {
             json.put("ano", encriptedAno);
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
 

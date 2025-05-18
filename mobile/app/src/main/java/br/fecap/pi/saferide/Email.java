@@ -113,6 +113,14 @@ public class Email extends AppCompatActivity {
         return !email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
+    // Método para obter o ID do usuário
+    private int getId() {
+        if (usuario != null) {
+            return usuario.getId();
+        }
+        return -1; // Valor padrão caso o usuário não esteja disponível
+    }
+
     private void enviarParaServidor(String dadosCriptografados) {
         String url = ""; // URL da API
 

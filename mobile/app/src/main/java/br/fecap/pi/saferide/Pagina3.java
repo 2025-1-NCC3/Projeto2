@@ -26,6 +26,8 @@ import br.fecap.pi.saferide.R;
 
 public class Pagina3 extends AppCompatActivity {
 
+    private Usuario usuario; // Certifique-se de que esta variável está sendo inicializada
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +38,19 @@ public class Pagina3 extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Obter o usuário da intent (se disponível)
+        if (getIntent().hasExtra("usuario")) {
+            usuario = (Usuario) getIntent().getSerializableExtra("usuario");
+        }
+    }
+
+    // Método para obter o ID do usuário (adicionado para resolver o problema)
+    private int getId() {
+        if (usuario != null) {
+            return usuario.getId();
+        }
+        return -1; // Valor padrão caso o usuário não esteja disponível
     }
 
     public void analisar(View view){
@@ -81,7 +96,7 @@ public class Pagina3 extends AppCompatActivity {
             // Monta o JSON
             JSONObject json = new JSONObject();
             try{
-                json.put("id", getId());
+                json.put("id", getId()); // Usando o método getId() adicionado
                 json.put("analise", analiseCriptografada);
             } catch (JSONException e) {
                 throw new RuntimeException(e);

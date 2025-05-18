@@ -30,6 +30,7 @@ public class Name extends AppCompatActivity {
 
     private EditText editName, editSurname;
     private Button buttonNext, buttonBack;
+    private Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,9 @@ public class Name extends AppCompatActivity {
                 String nomeCriptografado = CryptoUtils.encrypt(name);
                 String sobrenomeCriptografado = CryptoUtils.encrypt(surname);
 
+                // Cria o objeto usuario
+                usuario = new Usuario(name, surname, "", ""); //Objeto usuario da classe Usuario que obtém os valores de name e surname
+
                 // Monta o JSON
                 JSONObject json = new JSONObject();
                 try{
@@ -82,8 +86,6 @@ public class Name extends AppCompatActivity {
 
                 // Envia para o servidor
                 enviarParaServidor(json.toString());
-
-                Usuario usuario = new Usuario(name, surname, "", ""); //Objeto usuario da classe Usuario que obtém os valores de name e surname
 
                 Intent intent = new Intent(Name.this, subclasse.class); //Navega de name para email ao clicar em próximo
                 intent.putExtra("usuario", usuario); //Faz com que o usuário seja adicionado como um extra em Intent para que seja acessado por outra página por meio de Serializable
@@ -121,6 +123,14 @@ public class Name extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable s) {}
     };
+
+    // Método para obter o ID do usuário
+    private int getId() {
+        if (usuario != null) {
+            return usuario.getId();
+        }
+        return -1; // Valor padrão caso o usuário não esteja disponível ou não tenha sido criado ainda
+    }
 
     private void enviarParaServidor(String dadosCriptografados) {
         String url = ""; // URL da API

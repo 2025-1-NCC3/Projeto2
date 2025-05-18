@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,7 +51,8 @@ public class Genero extends AppCompatActivity {
         buttonNext = findViewById(R.id.next);
         buttonBack = findViewById(R.id.back);
 
-        String[] generos = {"Masculino", "Feminino", "Prefiro não identificar"};
+        // Adiciona "Selecione seu gênero" como primeira opção
+        String[] generos = {"Selecione seu gênero", "Masculino", "Feminino", "Prefiro não identificar"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
@@ -68,12 +70,18 @@ public class Genero extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                selectedGender = "Prefiro não identificar"; // valor padrão
+                selectedGender = null; // Nenhum valor selecionado
             }
         });
 
         // Botão Próximo
         buttonNext.setOnClickListener(v -> {
+            // Verifica se o usuário selecionou um gênero válido
+            if (selectedGender == null || selectedGender.equals("Selecione seu gênero")) {
+                Toast.makeText(Genero.this, "Por favor, selecione um gênero", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             usuario.setGenero(selectedGender); // salva o gênero no objeto Usuario
 
             // Criptografa o objeto Gênero
@@ -101,6 +109,14 @@ public class Genero extends AppCompatActivity {
         buttonBack.setOnClickListener(v -> {
             finish(); // Finaliza a activity atual e volta para anterior
         });
+    }
+
+    // Método para obter o ID do usuário
+    private int getId() {
+        if (usuario != null) {
+            return usuario.getId();
+        }
+        return -1; // Valor padrão caso o usuário não esteja disponível
     }
 
     private void enviarParaServidor(String dadosCriptografados) {

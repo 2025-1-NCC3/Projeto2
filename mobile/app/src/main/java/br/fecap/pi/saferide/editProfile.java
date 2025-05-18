@@ -106,7 +106,6 @@ public class editProfile extends AppCompatActivity {
                     jsonObject.put("senha", senhaCriptografada);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
 

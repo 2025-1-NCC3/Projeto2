@@ -5,23 +5,23 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.fecap.pi.saferide.Email">
+    tools:context=".Email">
 
     <EditText
         android:id="@+id/editPhone"
-        android:layout_width="300dp"
+        android:layout_width="270dp"
         android:layout_height="48dp"
         android:background="@drawable/campo_preenchimento"
         android:ems="10"
         android:hint=""
-        android:inputType="number"
+        android:inputType="phone"
         android:padding="12dp"
         android:textColor="#000000"
         android:textColorHint="#777777"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.711"
+        app:layout_constraintHorizontal_bias="0.773"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.2" />
@@ -80,12 +80,12 @@
 
     <Spinner
         android:id="@+id/spinnerDDI"
-        android:background="#E0E0E0"
-        android:layout_width="50dp"
+        android:layout_width="80dp"
         android:layout_height="48dp"
+        android:background="#E0E0E0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.044"
+        app:layout_constraintHorizontal_bias="0.039"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.2" />

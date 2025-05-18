@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import java.io.Serializable;
 
 public class Usuario implements Serializable {
+    private int id; // Adicionando campo id
     private String name;
     private String surname;
     private String email;
@@ -13,8 +14,8 @@ public class Usuario implements Serializable {
     private String tipoConta;
     private String cpf;
     private String cnh;
-    private Carro carro; // Novo campo
-    private String password; // Adicionando o campo password
+    private Carro carro;
+    private String password;
     private String salt;
 
     // Construtor
@@ -25,7 +26,16 @@ public class Usuario implements Serializable {
         this.number = number;
     }
 
-    // Getters e Setters
+    // Getter e Setter para o campo id
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    // Outros Getters e Setters
     public String getName() {
         return name;
     }

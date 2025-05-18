@@ -2,6 +2,8 @@ package br.fecap.pi.saferide;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -35,7 +38,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,11 +56,17 @@ public class ConfirmarViagemMotorista extends AppCompatActivity implements OnMap
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private static final float DEFAULT_ZOOM = 16f;
 
+    // Cores para o switch
+    private static final String SWITCH_THUMB_ACTIVE_COLOR = "#E91E63";    // Rosa vibrante quando ativo
+    private static final String SWITCH_TRACK_ACTIVE_COLOR = "#80E91E63";   // Rosa semi-transparente quando ativo
+    private static final String SWITCH_THUMB_INACTIVE_COLOR = "#AAAAAA";  // Cinza esmaecido quando inativo
+    private static final String SWITCH_TRACK_INACTIVE_COLOR = "#80AAAAAA"; // Cinza semi-transparente quando inativo
+
     // Interface elements
     private GoogleMap mMap;
     private MaterialButton tripButton;
     private ImageView backButton;
-    private Chip chipWomen;
+    private SwitchCompat switchWomen;
 
     // Location related variables
     private FusedLocationProviderClient fusedLocationClient;
@@ -117,7 +125,7 @@ public class ConfirmarViagemMotorista extends AppCompatActivity implements OnMap
             // Initialize UI elements
             tripButton = findViewById(R.id.tripButton);
             backButton = findViewById(R.id.backButton);
-            chipWomen = findViewById(R.id.chipWomen);
+            switchWomen = findViewById(R.id.switchWomen);
 
             // Obter o usuário atual da intent (ou SharedPreferences em um app real)
             usuarioAtual = getUsuarioFromIntent();
@@ -178,14 +186,37 @@ public class ConfirmarViagemMotorista extends AppCompatActivity implements OnMap
         return usuario;
     }
 
+    /**
+     * Define as cores do switch com base no estado (ativado/desativado)
+     * @param switchView O switch a ser colorido
+     * @param isChecked Se o switch está ativado ou não
+     */
+    private void setSwitchColors(SwitchCompat switchView, boolean isChecked) {
+        if (isChecked) {
+            // Cores quando ativado
+            switchView.setThumbTintList(ColorStateList.valueOf(Color.parseColor(SWITCH_THUMB_ACTIVE_COLOR)));
+            switchView.setTrackTintList(ColorStateList.valueOf(Color.parseColor(SWITCH_TRACK_ACTIVE_COLOR)));
+        } else {
+            // Cores esmaecidas quando desativado
+            switchView.setThumbTintList(ColorStateList.valueOf(Color.parseColor(SWITCH_THUMB_INACTIVE_COLOR)));
+            switchView.setTrackTintList(ColorStateList.valueOf(Color.parseColor(SWITCH_TRACK_INACTIVE_COLOR)));
+        }
+    }
+
     private void configureWomenModeVisibility() {
         // Verificar se o motorista é do gênero feminino para mostrar a opção "somente mulheres"
         if (usuarioAtual != null && "Feminino".equalsIgnoreCase(usuarioAtual.getGenero())) {
-            chipWomen.setVisibility(View.VISIBLE);
-            chipWomen.setChecked(womenOnlyMode);
+            switchWomen.setVisibility(View.VISIBLE);
+            switchWomen.setChecked(womenOnlyMode);
 
-            chipWomen.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Configurar cores iniciais do switch com base no estado atual
+            setSwitchColors(switchWomen, womenOnlyMode);
+
+            switchWomen.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 womenOnlyMode = isChecked;
+                // Atualizar cores do switch quando o estado muda
+                setSwitchColors(switchWomen, isChecked);
+
                 if (isChecked) {
                     Toast.makeText(this, "Modo somente mulheres ativado", Toast.LENGTH_SHORT).show();
                 } else {
@@ -199,7 +230,7 @@ public class ConfirmarViagemMotorista extends AppCompatActivity implements OnMap
                 }
             });
         } else {
-            chipWomen.setVisibility(View.GONE);
+            switchWomen.setVisibility(View.GONE);
         }
     }
 
