@@ -1,21 +1,32 @@
 # Projeto2
+## 🏛️ Instituição de Ensino
+**FECAP - Fundação Escola de Comércio Álvares Penteado**
+
 # 🚘 Safe Ride - Segurança para Motoristas e Passageiros
 
 Um aplicativo mobile inovador para tornar as viagens da Uber mais seguras, utilizando tecnologia avançada para análise comportamental, verificação de segurança, recompensas e preferências de gênero.
 
-## 👥 Integrantes do Projeto
+## 👥 Equipe do Projeto
 
-- **Julia Tosato de Jesus** - RA: 24026375  
-- **Vitor do Amaral Pereira** - RA: 23025384  
-- **João Victor Rezende Silva** - RA: 24025945
-- **Arthur Paltrinieri Silva** - RA: 24026559
+### Integrantes
+- **Julia Tosato de Jesus** 
+- **Vitor do Amaral Pereira** 
+- **João Victor Rezende Silva** 
+- **Arthur Paltrinieri Silva**
+
+###Professores e Orientadores:
+- **Kátia Milani Lara Bossi** 
+- **Marco Aurélio** 
+- **Victor Rosetti** 
+- **Vinicius Heltai**
 
 ## 🚀 Tecnologias Utilizadas
 
-- 
-- 
-- 
-- [✔] API da Uber (para integração de viagens)
+- [✔] Android Studio
+- [✔] SandBox
+- [✔] SQlite3
+- [✔] Node.js
+- [✔] API do GoogleMaps (para integração de viagens)
 
 ## 📌 Funcionalidades
 
@@ -23,8 +34,7 @@ A arquitetura desse projeto envolve uma série de funcionalidades avançadas e s
 
 - [✔] **Análise Comportamental**: Identificação de padrões suspeitos durante a viagem.
 - [✔] **Verificação de Segurança**: Alertas e validações em tempo real para motoristas e passageiros.
-- [✔] **Recompensas**: Incentivos para bons motoristas e passageiros.
-- [✔] **Preferências de Gênero**: Opção para escolher motoristas com base no gênero para maior conforto e segurança.
+- [✔] **Uber Women**: Opção para usuárias optarem por motoristas ou passageiras do gênero feminino para maior conforto e segurança.
 
 ## 🎯 Como Rodar o Projeto
 
@@ -56,5 +66,13 @@ Caso queira contribuir, siga estas etapas:
 3. Commit suas alterações (`git commit -m 'Adiciona nova funcionalidade'`).
 4. Faça um push para a branch (`git push origin minha-feature`).
 5. Abra um Pull Request.
+
+📋 Licença/License
+Uber SafeRide por Vitor do Amaral Pereira, Julia Tosato, João Victor Rezende, Arthur Paltrinieri é licenciado por CC BY 4.0.
+
+🎓 Referências
+1. Android Studio
+2. Documentações Java
+3. Documentações Google maps
 
 
