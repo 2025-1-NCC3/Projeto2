@@ -1,14 +1,15 @@
 package br.fecap.pi.saferide;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RespostasFormulario implements Serializable {
-    // Declaração das variáveis
     private int extroversaoSim, extroversaoNao;
     private int neuroticismoSim, neuroticismoNao;
     private int psicoticismoSim, psicoticismoNao;
+    private List<RespostaQuestionarioItem> respostasParaServidor;
 
-    // Construtor do objeto
     public RespostasFormulario() {
         this.extroversaoSim = 0;
         this.extroversaoNao = 0;
@@ -16,13 +17,17 @@ public class RespostasFormulario implements Serializable {
         this.neuroticismoNao = 0;
         this.psicoticismoSim = 0;
         this.psicoticismoNao = 0;
+        this.respostasParaServidor = new ArrayList<>();
     }
 
-    // Método que armazena a "pontuação" das respostas
-    public void adicionarResposta(String resposta, String categoria) {
-        boolean ehSim = resposta.equalsIgnoreCase("sim");
+    public void adicionarResposta(String resposta, String categoria, int questionId) {
+        boolean ehSim = resposta.trim().equalsIgnoreCase("sim");
+        String respostaNormalizada = ehSim ? "sim" : "não";
 
-        switch (categoria) {
+        respostasParaServidor.removeIf(item -> item.getQuestionId() == questionId);
+        respostasParaServidor.add(new RespostaQuestionarioItem(questionId, respostaNormalizada));
+
+        switch (categoria.toLowerCase()) {
             case "extroversao":
                 if (ehSim) extroversaoSim++;
                 else extroversaoNao++;
@@ -38,27 +43,24 @@ public class RespostasFormulario implements Serializable {
         }
     }
 
-    // Método para obter a pontuação final de cada categoria
+    public List<RespostaQuestionarioItem> getRespostasParaServidor() {
+        return respostasParaServidor;
+    }
+
     public int getPontuacao(String categoria) {
-        switch (categoria) {
-            case "extroversao":
-                return extroversaoSim; // Consideramos apenas as respostas "Sim"
-            case "neuroticismo":
-                return neuroticismoSim;
-            case "psicoticismo":
-                return psicoticismoSim;
-            default:
-                return 0;
+        switch (categoria.toLowerCase()) {
+            case "extroversao": return extroversaoSim;
+            case "neuroticismo": return neuroticismoSim;
+            case "psicoticismo": return psicoticismoSim;
+            default: return 0;
         }
     }
 
-    // Método para Determinar o Comportamento
     public String determinarTemperamento() {
         int extroversao = getPontuacao("extroversao");
         int neuroticismo = getPontuacao("neuroticismo");
-
-        boolean ehExtrovertido = extroversao >= 3; // 3-5 Extrovertido, 0-2 Introvertido
-        boolean ehNeurotico = neuroticismo >= 3;   // 3-5 Neurótico, 0-2 Estável
+        boolean ehExtrovertido = extroversao >= 3;
+        boolean ehNeurotico = neuroticismo >= 3;
 
         if (ehExtrovertido && !ehNeurotico) {
             return "Sanguíneo (Sociável, otimista, animado)";
@@ -71,29 +73,10 @@ public class RespostasFormulario implements Serializable {
         }
     }
 
-    // Atribuição dos valores obtidos às variáveis
-    public int getExtroversaoSim() {
-        return extroversaoSim;
-    }
-
-    public int getExtroversaoNao() {
-        return extroversaoNao;
-    }
-
-    public int getNeuroticismoSim() {
-        return neuroticismoSim;
-    }
-
-    public int getNeuroticismoNao() {
-        return neuroticismoNao;
-    }
-
-    public int getPsicoticismoSim() {
-        return psicoticismoSim;
-    }
-
-    public int getPsicoticismoNao() {
-        return psicoticismoNao;
-    }
+    public int getExtroversaoSim() { return extroversaoSim; }
+    public int getExtroversaoNao() { return extroversaoNao; }
+    public int getNeuroticismoSim() { return neuroticismoSim; }
+    public int getNeuroticismoNao() { return neuroticismoNao; }
+    public int getPsicoticismoSim() { return psicoticismoSim; }
+    public int getPsicoticismoNao() { return psicoticismoNao; }
 }
-

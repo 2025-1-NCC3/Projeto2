@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+// import android.util.Log; // Não usado diretamente após as modificações
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast; // Adicionado para feedback ao usuário
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,30 +16,29 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+// Removidos imports do Volley e JSON, pois não faremos chamada de rede aqui
+// import com.android.volley.Request;
+// import com.android.volley.RequestQueue;
+// import com.android.volley.toolbox.StringRequest;
+// import com.android.volley.toolbox.Volley;
+// import org.json.JSONException;
+// import org.json.JSONObject;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import br.fecap.pi.saferide.security.CryptoUtils;
-import br.fecap.pi.saferide.R;
+// Removido import do CryptoUtils por enquanto, assumindo que nome/sobrenome não serão criptografados pelo cliente para o servidor
+// import br.fecap.pi.saferide.security.CryptoUtils;
 
 public class Name extends AppCompatActivity {
 
     private EditText editName, editSurname;
     private Button buttonNext, buttonBack;
+    // Removido o campo 'usuario' aqui, pois ele será criado e passado no clique do botão
+    // private Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         EdgeToEdge.enable(this);
-        setContentView(R.layout.name);
-
+        setContentView(R.layout.name); // Certifique-se que R.layout.name é o seu layout correto
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -46,75 +46,66 @@ public class Name extends AppCompatActivity {
             return insets;
         });
 
-        // Inicializa os componentes EditText e Button
         editName = findViewById(R.id.editName);
         editSurname = findViewById(R.id.editSurname);
         buttonNext = findViewById(R.id.next);
         buttonBack = findViewById(R.id.back);
 
-        // Desabilita o botão "Próximo" inicialmente
         buttonNext.setEnabled(false);
 
-        // Adiciona listeners para os campos de texto - servem para validar se os campos são preenchidos
         editName.addTextChangedListener(textWatcher);
         editSurname.addTextChangedListener(textWatcher);
 
-        // Configura o botão "Próximo"
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = editName.getText().toString().trim(); //Faz a conversão do text para string
+                String name = editName.getText().toString().trim();
                 String surname = editSurname.getText().toString().trim();
 
-                // Criptografa o nome e o sobrenome
-                String nomeCriptografado = CryptoUtils.encrypt(name);
-                String sobrenomeCriptografado = CryptoUtils.encrypt(surname);
-
-                // Monta o JSON
-                JSONObject json = new JSONObject();
-                try{
-                    json.put("id", getId());
-                    json.put("nome", nomeCriptografado);
-                    json.put("sobrenome", sobrenomeCriptografado);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                // Validação simples (TextWatcher já faz a validação de não vazio)
+                if (name.length() < 2) { // Exemplo de validação de tamanho mínimo
+                    editName.setError("Nome muito curto");
+                    editName.requestFocus();
+                    return;
+                }
+                if (surname.length() < 2) {
+                    editSurname.setError("Sobrenome muito curto");
+                    editSurname.requestFocus();
+                    return;
                 }
 
-                // Envia para o servidor
-                enviarParaServidor(json.toString());
+                // Cria um NOVO objeto Usuario, já que esta é a primeira tela de cadastro.
+                // Nas próximas Activities do fluxo, você recuperaria o objeto Usuario da Intent,
+                // adicionaria os novos dados e o passaria adiante.
+                // O construtor do Usuario foi adaptado para aceitar os campos que temos até agora.
+                // Se seu construtor for diferente, ajuste aqui ou crie um construtor vazio e use setters.
+                Usuario novoUsuario = new Usuario(name, surname, null, null); // Email e telefone serão preenchidos depois
 
-                Usuario usuario = new Usuario(name, surname, "", ""); //Objeto usuario da classe Usuario que obtém os valores de name e surname
 
-                Intent intent = new Intent(Name.this, subclasse.class); //Navega de name para email ao clicar em próximo
-                intent.putExtra("usuario", usuario); //Faz com que o usuário seja adicionado como um extra em Intent para que seja acessado por outra página por meio de Serializable
-                startActivity(intent); //Inicia a activity
+                Intent intent = new Intent(Name.this, subclasse.class);
+                intent.putExtra("usuario_parcial", novoUsuario); // Passa o objeto com os dados coletados
+                startActivity(intent);
             }
         });
 
-        // Configura o botão "Voltar"
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Volta para a tela de Login
                 Intent intent = new Intent(Name.this, Login.class);
                 startActivity(intent);
-                finish(); // Finaliza a atividade atual para liberar memória
+                finish();
             }
         });
     }
 
-    // TextWatcher para monitorar os campos de texto
     private final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            // Verifica se ambos os campos estão preenchidos
             String name = editName.getText().toString().trim();
             String surname = editSurname.getText().toString().trim();
-
-            // Habilita o botão "Próximo" somente se ambos os campos estiverem preenchidos
             buttonNext.setEnabled(!name.isEmpty() && !surname.isEmpty());
         }
 
@@ -122,29 +113,5 @@ public class Name extends AppCompatActivity {
         public void afterTextChanged(Editable s) {}
     };
 
-    private void enviarParaServidor(String dadosCriptografados) {
-        String url = ""; // URL da API
 
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                response -> {
-                    Log.d("API", "Resposta: " + response);
-                },
-                error -> {
-                    Log.e("API", "Erro: ", error);
-                }
-        ) {
-            @Override
-            public byte[] getBody() {
-                return dadosCriptografados.getBytes();
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json"; // Envio do JSON
-            }
-        };
-
-        queue.add(stringRequest);
-    }
 }

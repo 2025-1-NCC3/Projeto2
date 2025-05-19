@@ -15,7 +15,7 @@
         android:ems="10"
         android:inputType="text"
         android:padding="12dp"
-        android:hint="exemplo@gmail.com"
+        android:hint="exemplo@email.com"
         android:textColor="#000000"
         android:textColorHint="#777777"
         android:textSize="20sp"

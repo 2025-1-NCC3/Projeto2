@@ -3,120 +3,230 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="br.fecap.pi.saferide.Menu">
 
-    <TextView
-        android:id="@+id/Welcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bem vindo ao Safe Ride"
-        android:fontFamily="@font/ubermovebold"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/TextQ"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="O que você gostaria de fazer?"
-        android:fontFamily="@font/ubermovebold"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.15" />
+        <ImageView
+            android:layout_width="177dp"
+            android:layout_height="133dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/logo" />
+    </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/rideButton"
-        android:layout_width="305dp"
+        android:layout_width="375dp"
+        android:layout_height="50dp"
+        android:gravity="start|center_vertical"
+        android:backgroundTint="#efefef"
+        android:fontFamily="@font/ubermovebold"
+        android:insetLeft="16dp"
+        android:insetTop="0dp"
+        android:insetRight="16dp"
+        android:insetBottom="0dp"
+        android:text="Para onde?"
+        android:textColor="#5e5e5e"
+        android:textSize="17dp"
+        app:cornerRadius="100dp"
+        app:icon="@drawable/ic_search"
+        app:iconSize="24dp"
+        app:iconPadding="4dp"
+        app:iconTint="#5e5e5e"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.133" />
+
+    <!-- Opções Work (Restaurante) e Home (Shopping) -->
+    <LinearLayout
+        android:id="@+id/suggestedPlacesContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/standardbutton"
-        android:fontFamily="@font/ubermovemedium"
-        android:textSize="16sp"
-        android:text="Solicitar uma viagem"
-        android:textColor="#FFFFFF"
-        app:backgroundTint="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/rideButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/profileButton"
-        android:layout_width="305dp"
-        android:layout_height="48dp"
-        android:background="@drawable/standardbutton"
-        android:fontFamily="@font/ubermovemedium"
-        android:textSize="16sp"
-        android:text="Editar perfil"
-        android:textColor="#FFFFFF"
-        app:backgroundTint="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6" />
+        <!-- Restaurante -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/historyButton"
-        android:layout_width="305dp"
-        android:layout_height="48dp"
-        android:background="@drawable/standardbutton"
-        android:fontFamily="@font/ubermovemedium"
-        android:textSize="16sp"
-        android:text="Histórico de viagens"
-        android:textColor="#FFFFFF"
-        app:backgroundTint="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45" />
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_restaurant" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/formButton"
-        android:layout_width="305dp"
-        android:layout_height="48dp"
-        android:textSize="16sp"
-        android:background="@drawable/standardbutton"
-        android:fontFamily="@font/ubermovemedium"
-        android:text="Formulário Análise comportamental"
-        android:textColor="#FFFFFF"
-        app:backgroundTint="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/logoutButton"
-        android:layout_width="305dp"
-        android:layout_height="48dp"
-        android:textSize="16sp"
-        android:background="@drawable/back_button"
-        android:fontFamily="@font/ubermovemedium"
-        android:text="Finalizar sessão"
-        android:textColor="#e02a4a"
-        app:backgroundTint="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Restaurante na região"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="O restaurante melhor avaliado da sua região!"
+                    android:textSize="14sp"
+                    android:textColor="#777777" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            app:layout_constraintTop_toBottomOf="@id/userName"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <!-- Shopping -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_fecap" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="FECAP"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Av. da Liberdade, 532 - Liberdade, São Paulo - SP"
+                    android:textSize="14sp"
+                    android:textColor="#777777" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.90" />
+        tools:layout_editor_absoluteX="-16dp">
+
+        <LinearLayout
+            android:id="@+id/bottomMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingVertical="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <!-- Botão 1 -->
+            <Button
+                android:id="@+id/btnInicio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:drawableTop="@drawable/ic_home"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="Início"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+
+            <!-- Botão 2 -->
+            <Button
+                android:id="@+id/formButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:drawableTop="@drawable/ic_form"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="Formulário"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <!-- Botão 3 -->
+            <Button
+                android:id="@+id/historyButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:drawableTop="@drawable/ic_history"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="Histórico"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <!-- Botão 4 -->
+            <Button
+                android:id="@+id/profileButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:drawableTop="@drawable/ic_account"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="Conta"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

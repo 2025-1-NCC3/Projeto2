@@ -1,0 +1,18 @@
+<resources>
+    <string-array name="car_colors_array">
+        <item>Selecione uma cor</item>
+        <item>Preto</item>
+        <item>Branco</item>
+        <item>Prata</item>
+        <item>Cinza</item>
+        <item>Vermelho</item>
+        <item>Azul</item>
+        <item>Verde</item>
+        <item>Amarelo</item>
+        <item>Marrom</item>
+        <item>Bege</item>
+        <item>Laranja</item>
+        <item>Dourado</item>
+        <item>Vinho</item>
+    </string-array>
+</resources>

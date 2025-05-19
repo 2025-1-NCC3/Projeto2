@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">SafeRide</string>
+    <string name="Maps_key">AIzaSyAonm1HAxkQGlm5vpUsNmTQZ0w4HTtsHkU</string>
     <string name="google_maps_key">AIzaSyAonm1HAxkQGlm5vpUsNmTQZ0w4HTtsHkU</string>
 </resources>

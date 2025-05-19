@@ -8,7 +8,7 @@
     tools:context="br.fecap.pi.saferide.subclasse">
 
     <TextView
-        android:id="@+id/subclasseType"
+        android:id="@+id/subclasseTypeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -22,28 +22,29 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <RadioGroup
-        android:id="@+id/genderRadioGroup"
+        android:id="@+id/accountTypeRadioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="24dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/subclasseType"
+        app:layout_constraintTop_toBottomOf="@id/subclasseTypeTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <RadioButton
-            android:id="@+id/radioPassenger"
+            android:id="@+id/radioMotorista"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="16dp"
             android:fontFamily="@font/ubermovemedium"
             android:text="Motorista"
             android:textSize="18sp" />
 
         <RadioButton
-            android:id="@+id/radioRider"
+            android:id="@+id/radioPassageiro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:fontFamily="@font/ubermovemedium"
             android:text="Passageiro"
             android:textSize="18sp" />
@@ -51,46 +52,70 @@
 
     <EditText
         android:id="@+id/editCNH"
-        android:layout_width="382dp"
-        android:layout_height="48dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
         android:background="@drawable/campo_preenchimento"
         android:ems="10"
-        android:inputType="text"
-        android:padding="12dp"
-        android:hint="CNH"
+        android:hint="Número da CNH"
+        android:inputType="number"
+        android:maxLength="11"
+        android:padding="14dp"
         android:textColor="#000000"
         android:textColorHint="#777777"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="18sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.551"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintTop_toBottomOf="@+id/accountTypeRadioGroup" />
 
     <EditText
         android:id="@+id/editCPF"
-        android:layout_width="382dp"
-        android:layout_height="48dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
         android:background="@drawable/campo_preenchimento"
         android:ems="10"
-        android:inputType="text"
-        android:padding="12dp"
-        android:hint="CPF"
+        android:hint="CPF (somente números)"
+        android:inputType="number"
+        android:maxLength="14"
+        android:padding="14dp"
         android:textColor="#000000"
         android:textColorHint="#777777"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="18sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.551"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintTop_toBottomOf="@+id/accountTypeRadioGroup" />
 
-    <com.google.android.material.button.MaterialButton
+    <EditText
+        android:id="@+id/editBirthday"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/campo_preenchimento"
+        android:ems="10"
+        android:hint="Data de Nascimento (DD/MM/AAAA)"
+        android:inputType="date"
+        android:maxLength="10"
+        android:padding="14dp"
+        android:textColor="#000000"
+        android:textColorHint="#777777"
+        android:textSize="18sp"
+        android:visibility="gone" app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editCPF" /> <com.google.android.material.button.MaterialButton
         android:id="@+id/next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:text="Próximo"
         android:fontFamily="@font/ubermovemedium"
         android:textColor="@color/white"
@@ -100,16 +125,14 @@
         android:paddingHorizontal="24dp"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.96"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
         android:text="Voltar"
         android:fontFamily="@font/ubermovemedium"
         android:textColor="@color/black"
@@ -119,10 +142,6 @@
         android:paddingHorizontal="24dp"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.04"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

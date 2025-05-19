@@ -1,62 +1,65 @@
 package br.fecap.pi.saferide;
 
-import com.google.gson.Gson;
-
+import com.google.gson.Gson; // Mantenha Gson se usar para outras serializações locais
 import java.io.Serializable;
 
 public class Usuario implements Serializable {
+    private int id;
     private String name;
-    private String surname;
+    private String surname; // Seu backend espera 'name', mas pode ser que você use surname em outro lugar
     private String email;
-    private String number;
+    private String phone; // No seu backend, é 'phone', aqui está 'number'
+    private String birthday; // Adicionado para corresponder ao backend
     private String genero;
     private String tipoConta;
     private String cpf;
     private String cnh;
-    private Carro carro; // Novo campo
-    private String password; // Adicionando o campo password
-    private String salt;
+    private Carro carro; // Mantido, útil se o backend retornar info do carro aninhada
+    private String password; // Usado temporariamente para coletar a senha do usuário
+    private String salt;     // Mantido, mas provavelmente não usado pelo bcrypt do servidor da forma como está
 
-    // Construtor
+    // Construtor principal que pode ser usado pela API
+    public Usuario(String name, String email, String phone, String birthday, String genero, String tipoConta, String cpf) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.birthday = birthday;
+        this.genero = genero;
+        this.tipoConta = tipoConta;
+        this.cpf = cpf;
+    }
+
+    // Construtor mais simples que você tinha, pode ser útil para outros cenários
     public Usuario(String name, String surname, String email, String number) {
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.number = number;
+        this.phone = number; // Mapeando 'number' para 'phone'
     }
+
 
     // Getters e Setters
-    public String getName() {
-        return name;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getSurname() {
-        return surname;
-    }
+    public String getSurname() { return surname; }
+    public void setSurname(String surname) { this.surname = surname; }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getEmail() {
-        return email;
-    }
+    // Mantendo 'getNumber' mas usando 'phone' internamente para consistência com backend
+    public String getNumber() { return phone; }
+    public void setNumber(String number) { this.phone = number; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
+    public String getBirthday() { return birthday; }
+    public void setBirthday(String birthday) { this.birthday = birthday; }
 
     public String getGenero() { return genero; }
     public void setGenero(String genero) { this.genero = genero; }
@@ -73,20 +76,12 @@ public class Usuario implements Serializable {
     public Carro getCarro() { return carro; }
     public void setCarro(Carro carro) { this.carro = carro; }
 
-    // Métodos para o campo password
-    public String getPassword() {
-        return password;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    public String getSalt(){ return salt; }
-    public void setSalt(String salt){ this.salt = salt; }
-    public String toJson(){
-        return new Gson().toJson(this);
-    }
-    public static Usuario fromJson(String json) {
-        return new Gson().fromJson(json, Usuario.class);
-    }
+    public String getSalt() { return salt; } // Getter para salt
+    public void setSalt(String salt) { this.salt = salt; } // Setter para salt
+
+    public String toJson(){ return new Gson().toJson(this); }
+    public static Usuario fromJson(String json) { return new Gson().fromJson(json, Usuario.class); }
 }

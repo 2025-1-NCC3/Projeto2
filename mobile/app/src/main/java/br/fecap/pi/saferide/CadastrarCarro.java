@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -17,25 +17,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import br.fecap.pi.saferide.R;
-import br.fecap.pi.saferide.security.CryptoUtils;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class CadastrarCarro extends AppCompatActivity {
 
+    private static final String TAG = "CadastrarCarroActivity";
     private EditText editBrand, editModel, editPlaca;
     private Spinner spinnerColor, spinnerAno;
     private ImageView backButton;
-    private Button btnCadastrar;
-    private Usuario usuario;
+    private MaterialButton btnCadastrar;
+    private Usuario usuarioLogado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,110 +44,131 @@ public class CadastrarCarro extends AppCompatActivity {
             return insets;
         });
 
-        // Recupera o usuário vindo da tela anterior
-        usuario = (Usuario) getIntent().getSerializableExtra("usuario");
+        if (getIntent().hasExtra("usuario")) {
+            usuarioLogado = (Usuario) getIntent().getSerializableExtra("usuario");
+        }
 
-        // Inicializa os componentes da tela
+        if (usuarioLogado == null) {
+            Toast.makeText(this, "Erro: Usuário não encontrado. Tente novamente.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
         editBrand = findViewById(R.id.editBrand);
         editModel = findViewById(R.id.editModel);
         editPlaca = findViewById(R.id.editPlaca);
         spinnerColor = findViewById(R.id.spinnerColor);
         spinnerAno = findViewById(R.id.spinnerAno);
         btnCadastrar = findViewById(R.id.button2);
-        backButton = findViewById(R.id.backButton); // <- Aqui está a linha adicionada
+        backButton = findViewById(R.id.backButton);
 
-        btnCadastrar.setOnClickListener(v -> cadastrarCarro());
+        setupAnoSpinner();
+        setupCorSpinner();
 
-        backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(CadastrarCarro.this, MenuRider.class);
-            intent.putExtra("usuario", usuario);
-            startActivity(intent);
-            finish();
-        });
+        if (usuarioLogado.getCarro() != null) {
+            preencherDadosCarro(usuarioLogado.getCarro());
+        }
+
+        btnCadastrar.setOnClickListener(v -> salvarCarroLocalmente());
+
+        backButton.setOnClickListener(v -> finish());
     }
 
-    private void cadastrarCarro() {
+    private void preencherDadosCarro(Carro carro) {
+        editBrand.setText(carro.getMarca());
+        editModel.setText(carro.getModelo());
+        editPlaca.setText(carro.getPlaca());
+
+        if (spinnerColor.getAdapter() != null) {
+            for (int i = 0; i < spinnerColor.getAdapter().getCount(); i++) {
+                if (spinnerColor.getAdapter().getItem(i).toString().equalsIgnoreCase(carro.getCor())) {
+                    spinnerColor.setSelection(i);
+                    break;
+                }
+            }
+        }
+        if (spinnerAno.getAdapter() != null) {
+            for (int i = 0; i < spinnerAno.getAdapter().getCount(); i++) {
+                if (spinnerAno.getAdapter().getItem(i).toString().equals(carro.getAno())) {
+                    spinnerAno.setSelection(i);
+                    break;
+                }
+            }
+        }
+    }
+
+
+    private void setupAnoSpinner() {
+        ArrayList<String> anos = new ArrayList<>();
+        int anoAtual = Calendar.getInstance().get(Calendar.YEAR);
+        for (int i = anoAtual + 1; i >= anoAtual - 25; i--) {
+            anos.add(Integer.toString(i));
+        }
+        ArrayAdapter<String> anoAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, anos);
+        anoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerAno.setAdapter(anoAdapter);
+    }
+
+    private void setupCorSpinner() {
+        ArrayAdapter<CharSequence> corAdapter = ArrayAdapter.createFromResource(this,
+                R.array.car_colors_array, android.R.layout.simple_spinner_item);
+        corAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerColor.setAdapter(corAdapter);
+    }
+
+    private boolean validarCampos(String marca, String modelo, String placa, String cor, String ano) {
+        if (marca.isEmpty()) {
+            editBrand.setError("Marca é obrigatória");
+            editBrand.requestFocus();
+            return false;
+        }
+        if (modelo.isEmpty()) {
+            editModel.setError("Modelo é obrigatório");
+            editModel.requestFocus();
+            return false;
+        }
+        if (placa.isEmpty()) {
+            editPlaca.setError("Placa é obrigatória");
+            editPlaca.requestFocus();
+            return false;
+        }
+        if (!placa.matches("[A-Z]{3}[0-9][A-Z0-9][0-9]{2}") && !placa.matches("[A-Z]{3}[0-9]{4}")) {
+            editPlaca.setError("Formato de placa inválido");
+            editPlaca.requestFocus();
+            return false;
+        }
+        if (cor == null || cor.isEmpty() || cor.equals(getResources().getStringArray(R.array.car_colors_array)[0])) {
+            Toast.makeText(this, "Selecione uma cor válida.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (ano == null || ano.isEmpty()) {
+            Toast.makeText(this, "Selecione um ano válido.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void salvarCarroLocalmente() {
         String marca = editBrand.getText().toString().trim();
         String modelo = editModel.getText().toString().trim();
-        String placa = editPlaca.getText().toString().trim();
+        String placa = editPlaca.getText().toString().trim().toUpperCase();
         String cor = spinnerColor.getSelectedItem().toString();
         String ano = spinnerAno.getSelectedItem().toString();
 
-        if (marca.isEmpty() || modelo.isEmpty() || placa.isEmpty()) {
-            Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
+        if (!validarCampos(marca, modelo, placa, cor, ano)) {
             return;
         }
 
         Carro carro = new Carro(marca, modelo, cor, ano, placa);
+        usuarioLogado.setCarro(carro);
 
-        // Criptografa para as informações do carro
-        String encriptedMarca = CryptoUtils.encrypt(marca);
-        String encriptedModelo = CryptoUtils.encrypt(modelo);
-        String encriptedPlaca = CryptoUtils.encrypt(placa);
-        String encriptedCor = CryptoUtils.encrypt(cor);
-        String encriptedAno = CryptoUtils.encrypt(ano);
-
-        // Prepara o JSON
-        JSONObject json = new JSONObject();
-        try {
-            json.put("id", usuario.getId()); // Para relacionar as informações a um usuário
-            json.put("marca", encriptedMarca);
-            json.put("modelo", encriptedModelo);
-            json.put("placa", encriptedPlaca);
-            json.put("cor", encriptedCor);
-            json.put("ano", encriptedAno);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Envia para o servidor
-        enviarParaServidor(json.toString());
-
-        // Associa o carro ao usuário
-        usuario.setCarro(carro);
-
-        // Salva o usuário com o carro no SharedPreferences
-        SharedPreferences preferences = getSharedPreferences("usuario_prefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        Gson gson = new Gson();
-        String usuarioJson = gson.toJson(usuario);
-        editor.putString("usuario_logado", usuarioJson);
+        SharedPreferences prefs = getSharedPreferences(Login.AUTH_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(Login.USER_DETAILS_KEY, usuarioLogado.toJson());
         editor.apply();
 
-        Toast.makeText(this, "Carro cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
-
-        // Volta para a tela principal
-        Intent intent = new Intent(CadastrarCarro.this, MenuRider.class);
-        intent.putExtra("usuario", usuario);
-        startActivity(intent);
+        Toast.makeText(this, "Dados do carro salvos localmente!", Toast.LENGTH_LONG).show();
         finish();
-    }
-
-    private void enviarParaServidor(String dadosCriptografados) {
-        String url = ""; // URL da API
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                response -> {
-                    Log.d("API", "Resposta: " + response);
-                },
-                error -> {
-                    Log.e("API", "Erro: ", error);
-                }
-        ) {
-            @Override
-            public byte[] getBody() {
-                return dadosCriptografados.getBytes();
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json"; // Envio do JSON
-            }
-        };
-
-        queue.add(stringRequest);
     }
 }
