@@ -96,7 +96,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1455 Market St"
+                    android:text="O restaurante melhor avaliado da sua região!"
                     android:textSize="14sp"
                     android:textColor="#777777" />
             </LinearLayout>
@@ -123,7 +123,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_shopping" />
+                android:src="@drawable/ic_fecap" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -135,7 +135,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Shopping mais próximo"
+                    android:text="FECAP"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="#000000" />
@@ -143,7 +143,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="903 Sunrose Terr"
+                    android:text="Av. da Liberdade, 532 - Liberdade, São Paulo - SP"
                     android:textSize="14sp"
                     android:textColor="#777777" />
             </LinearLayout>

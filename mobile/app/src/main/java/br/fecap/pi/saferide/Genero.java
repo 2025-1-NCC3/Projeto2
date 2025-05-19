@@ -2,7 +2,7 @@ package br.fecap.pi.saferide;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+// import android.util.Log; // Não estritamente necessário após as modificações
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,20 +15,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.button.MaterialButton;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import br.fecap.pi.saferide.R;
-import br.fecap.pi.saferide.security.CryptoUtils;
+// Imports de Volley, JSON e CryptoUtils foram removidos pois não são usados nesta activity
 
 public class Genero extends AppCompatActivity {
 
+    private static final String TAG = "GeneroActivity";
     private Spinner spinnerGender;
     private MaterialButton buttonNext, buttonBack;
     private String selectedGender;
@@ -46,13 +39,25 @@ public class Genero extends AppCompatActivity {
             return insets;
         });
 
-        usuario = (Usuario) getIntent().getSerializableExtra("usuario");
+        if (getIntent().hasExtra("usuario_parcial")) {
+            usuario = (Usuario) getIntent().getSerializableExtra("usuario_parcial");
+        }
+
+        if (usuario == null) {
+            Toast.makeText(this, "Erro: Dados de cadastro incompletos. Reiniciando.", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, Name.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         spinnerGender = findViewById(R.id.spinnerGender);
         buttonNext = findViewById(R.id.next);
         buttonBack = findViewById(R.id.back);
 
-        // Adiciona "Selecione seu gênero" como primeira opção
-        String[] generos = {"Selecione seu gênero", "Masculino", "Feminino", "Prefiro não identificar"};
+        // VOLTANDO PARA A DEFINIÇÃO ORIGINAL DO ARRAY DE GÊNEROS DIRETAMENTE NO CÓDIGO
+        final String[] generos = {"Selecione seu gênero", "Masculino", "Feminino", "Prefiro não identificar"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
@@ -62,86 +67,42 @@ public class Genero extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerGender.setAdapter(adapter);
 
+        buttonNext.setEnabled(false);
+
         spinnerGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedGender = generos[position];
+                if (position == 0) {
+                    selectedGender = null;
+                    buttonNext.setEnabled(false);
+                } else {
+                    selectedGender = generos[position];
+                    buttonNext.setEnabled(true);
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                selectedGender = null; // Nenhum valor selecionado
+                selectedGender = null;
+                buttonNext.setEnabled(false);
             }
         });
 
-        // Botão Próximo
         buttonNext.setOnClickListener(v -> {
-            // Verifica se o usuário selecionou um gênero válido
-            if (selectedGender == null || selectedGender.equals("Selecione seu gênero")) {
-                Toast.makeText(Genero.this, "Por favor, selecione um gênero", Toast.LENGTH_SHORT).show();
+            if (selectedGender == null || selectedGender.equals(generos[0])) {
+                Toast.makeText(Genero.this, "Por favor, selecione um gênero válido.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            usuario.setGenero(selectedGender); // salva o gênero no objeto Usuario
+            usuario.setGenero(selectedGender);
 
-            // Criptografa o objeto Gênero
-            String generoCriptografado = CryptoUtils.encrypt(selectedGender);
-
-            // Monta o JSON
-            JSONObject json = new JSONObject();
-            try{
-                json.put("id", getId());
-                json.put("genero", generoCriptografado);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-
-            // Envia para o servidor
-            enviarParaServidor(json.toString());
-
-            // Redireciona para a próxima tela, passando o objeto atualizado
-            Intent intent = new Intent(Genero.this, Email.class); // Troque "ProximaTela.class" pela sua Activity real
-            intent.putExtra("usuario", usuario);
+            Intent intent = new Intent(Genero.this, Email.class); // Próxima Activity
+            intent.putExtra("usuario_parcial", usuario);
             startActivity(intent);
         });
 
-        // Botão Voltar
         buttonBack.setOnClickListener(v -> {
-            finish(); // Finaliza a activity atual e volta para anterior
+            finish();
         });
-    }
-
-    // Método para obter o ID do usuário
-    private int getId() {
-        if (usuario != null) {
-            return usuario.getId();
-        }
-        return -1; // Valor padrão caso o usuário não esteja disponível
-    }
-
-    private void enviarParaServidor(String dadosCriptografados) {
-        String url = ""; // URL da API
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                response -> {
-                    Log.d("API", "Resposta: " + response);
-                },
-                error -> {
-                    Log.e("API", "Erro: ", error);
-                }
-        ) {
-            @Override
-            public byte[] getBody() {
-                return dadosCriptografados.getBytes();
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json"; // Envio do JSON
-            }
-        };
-
-        queue.add(stringRequest);
     }
 }

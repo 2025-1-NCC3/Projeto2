@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context="br.fecap.pi.saferide.MapsActivity">
 
-    <!-- Área superior com botão de voltar e switch -->
     <RelativeLayout
         android:id="@+id/topArea"
         android:layout_width="match_parent"
@@ -15,7 +14,6 @@
         android:paddingTop="16dp"
         android:paddingBottom="8dp">
 
-        <!-- Botão de voltar no canto superior esquerdo -->
         <ImageView
             android:id="@+id/backButton"
             android:layout_width="41dp"
@@ -27,7 +25,6 @@
             android:padding="8dp"
             android:src="@drawable/voltar" />
 
-        <!-- Switch para substituir o chip Women -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,316 +55,307 @@
 
     </RelativeLayout>
 
-    <!-- Mapa ocupa toda a área abaixo da topArea -->
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp" />
+        android:layout_marginTop="60dp" /> <androidx.core.widget.NestedScrollView
+    android:id="@+id/bottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="350dp"> <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <!-- Bottom Sheet para as opções de viagem -->
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/bottomSheet"
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:background="#CCCCCC" />
+
+    <TextView
+        android:id="@+id/trip_status_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        app:behavior_hideable="false"
-        app:behavior_peekHeight="320dp">
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:padding="24dp"
+        android:gravity="center"
+        android:text="Procurando motorista..."
+        android:visibility="gone" /> <LinearLayout
+    android:id="@+id/ride_selection_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="visible"> <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Escolha uma opção de viagem"
+    android:textSize="18sp"
+    android:textColor="#000000"
+    android:paddingTop="16dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="8dp"
+    android:gravity="center" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#E0E0E0" />
+
+    <LinearLayout
+        android:id="@+id/uberXOption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+        android:padding="16dp">
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_car_icon"
+            android:contentDescription="UberX car" />
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- Linha indicadora de arrasto -->
-            <View
-                android:layout_width="40dp"
-                android:layout_height="4dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="12dp"
-                android:background="#CCCCCC" />
-
-            <!-- Texto de cabeçalho -->
-            <TextView
-                android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Escolha uma opção de viagem"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="UberX"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:textStyle="bold" />
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_person"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="People capacity" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4"
+                    android:textSize="16sp"
+                    android:textColor="#000000"
+                    android:layout_marginStart="4dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5:56pm"
+                    android:textSize="14sp"
+                    android:textColor="#757575" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" • "
+                    android:textSize="14sp"
+                    android:textColor="#757575" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 min away"
+                    android:textSize="14sp"
+                    android:textColor="#757575" />
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/uberXPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R$ --"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#E0E0E0" />
+
+    <LinearLayout
+        android:id="@+id/uberBlackOption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+        android:padding="16dp">
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_car_icon"
+            android:contentDescription="UberBlack car" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UberBlack"
                 android:textSize="18sp"
                 android:textColor="#000000"
-                android:padding="16dp"
-                android:gravity="center" />
-
-            <!-- Separador -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E0E0E0" />
-
-            <!-- UberX Option -->
+                android:textStyle="bold" />
             <LinearLayout
-                android:id="@+id/uberXOption"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_car_icon"
-                    android:contentDescription="UberX car" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="16dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="UberX"
-                            android:textSize="18sp"
-                            android:textColor="#000000"
-                            android:textStyle="bold" />
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:src="@drawable/ic_person"
-                            android:layout_marginStart="8dp"
-                            android:contentDescription="People capacity" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="4"
-                            android:textSize="16sp"
-                            android:textColor="#000000"
-                            android:layout_marginStart="4dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="4dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="5:56pm"
-                            android:textSize="14sp"
-                            android:textColor="#757575" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" • "
-                            android:textSize="14sp"
-                            android:textColor="#757575" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="2 min away"
-                            android:textSize="14sp"
-                            android:textColor="#757575" />
-                    </LinearLayout>
-                </LinearLayout>
-
+                android:layout_marginTop="4dp">
                 <TextView
-                    android:id="@+id/uberXPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="R$ --"
-                    android:textSize="18sp"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:layout_gravity="center_vertical" />
-            </LinearLayout>
-
-            <!-- Separador -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E0E0E0" />
-
-            <!-- UberBlack Option -->
-            <LinearLayout
-                android:id="@+id/uberBlackOption"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_car_icon"
-                    android:contentDescription="UberBlack car" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="UberBlack"
-                        android:textSize="18sp"
-                        android:textColor="#000000"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="4dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="5:56pm"
-                            android:textSize="14sp"
-                            android:textColor="#757575" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" • "
-                            android:textSize="14sp"
-                            android:textColor="#757575" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="5 min away"
-                            android:textSize="14sp"
-                            android:textColor="#757575" />
-                    </LinearLayout>
-                </LinearLayout>
-
+                    android:text="5:56pm"
+                    android:textSize="14sp"
+                    android:textColor="#757575" />
                 <TextView
-                    android:id="@+id/uberBlackPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="R$ --"
-                    android:textSize="18sp"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:layout_gravity="center_vertical" />
-            </LinearLayout>
-
-            <!-- Separador -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E0E0E0" />
-
-            <!-- Uber Green Option -->
-            <LinearLayout
-                android:id="@+id/uberGreenOption"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <FrameLayout
-                    android:layout_width="48dp"
-                    android:layout_height="48dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_car_icon"
-                        android:contentDescription="Uber Green car" />
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@drawable/ic_leaf"
-                        android:layout_gravity="top|start"
-                        android:contentDescription="Green energy icon" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Uber Green"
-                        android:textSize="18sp"
-                        android:textColor="#000000"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="4dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="5:59pm"
-                            android:textSize="14sp"
-                            android:textColor="#757575" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" • "
-                            android:textSize="14sp"
-                            android:textColor="#757575" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="5 min away"
-                            android:textSize="14sp"
-                            android:textColor="#757575" />
-                    </LinearLayout>
-                </LinearLayout>
-
+                    android:text=" • "
+                    android:textSize="14sp"
+                    android:textColor="#757575" />
                 <TextView
-                    android:id="@+id/uberGreenPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="R$ --"
-                    android:textSize="18sp"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:layout_gravity="center_vertical" />
+                    android:text="5 min away"
+                    android:textSize="14sp"
+                    android:textColor="#757575" />
             </LinearLayout>
-
-            <!-- Separador -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E0E0E0" />
-
-            <!-- Extra space to allow for scrolling -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="100dp" />
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        <TextView
+            android:id="@+id/uberBlackPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R$ --"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#E0E0E0" />
+
+    <LinearLayout
+        android:id="@+id/uberGreenOption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+        android:padding="16dp">
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="48dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_car_icon"
+                android:contentDescription="Uber Green car" />
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_leaf"
+                android:layout_gravity="top|start"
+                android:contentDescription="Green energy icon" />
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Uber Green"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5:59pm"
+                    android:textSize="14sp"
+                    android:textColor="#757575" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" • "
+                    android:textSize="14sp"
+                    android:textColor="#757575" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5 min away"
+                    android:textSize="14sp"
+                    android:textColor="#757575" />
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/uberGreenPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R$ --"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="#E0E0E0" />
+
+</LinearLayout> <View
+    android:layout_width="match_parent"
+    android:layout_height="100dp" />
+</LinearLayout>
+</androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

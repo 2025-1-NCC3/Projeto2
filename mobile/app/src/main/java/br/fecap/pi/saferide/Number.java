@@ -2,28 +2,26 @@ package br.fecap.pi.saferide;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.PhoneNumberUtils;
+import android.text.Editable; // Para TextWatcher
+import android.text.TextWatcher; // Para TextWatcher
+// import android.telephony.PhoneNumberUtils; // Pode ser útil, mas sua validação customizada já existe
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.Button; // Usando android.widget.Button
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+// Removidos Volley, JSON e CryptoUtils por enquanto
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,358 +29,257 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.fecap.pi.saferide.security.CryptoUtils;
-import br.fecap.pi.saferide.R;
-
 public class Number extends AppCompatActivity {
 
+    private static final String TAG = "NumberActivity";
     private Spinner spinnerDDI;
     private EditText editPhone;
-    private Button buttonNext, buttonBack;
-    private String selectedDDI;
+    private MaterialButton buttonNext, buttonBack; // Usando MaterialButton conforme seu XML anterior
+    private String selectedDDIValue; // Armazena apenas os dígitos do DDI (ex: "55")
     private Usuario usuario;
-    private LinkedHashMap<String, String> ddiMap;
+    private LinkedHashMap<String, String> ddiMap; // Key: "+55 (Brasil)", Value: "55"
     private Map<String, PhoneFormatInfo> phoneFormats;
+    private boolean isFormattingPhone = false; // Flag para TextWatcher de formatação
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.number);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.number); // Certifique-se que R.layout.number é seu layout correto
 
-        // Ajustando padding para evitar sobreposição com barras do sistema
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Recupera o objeto Usuario passado pela atividade Email
-        usuario = (Usuario) getIntent().getSerializableExtra("usuario");
+        // Recupera o objeto Usuario passado pela atividade anterior
+        // Usando a chave consistente "usuario_parcial"
+        if (getIntent().hasExtra("usuario_parcial")) {
+            usuario = (Usuario) getIntent().getSerializableExtra("usuario_parcial");
+        }
 
-        // Ligando os elementos do XML às variáveis do Java
+        if (usuario == null) {
+            Toast.makeText(this, "Erro: Dados de cadastro incompletos. Reiniciando.", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, Name.class); // Ou sua primeira Activity de cadastro
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         spinnerDDI = findViewById(R.id.spinnerDDI);
         editPhone = findViewById(R.id.editPhone);
         buttonNext = findViewById(R.id.next);
         buttonBack = findViewById(R.id.back);
 
-        // Inicializa os mapas de países e formatos
         initDDIMap();
         initPhoneFormats();
 
-        // Criando um array com os códigos DDI para mostrar no spinner
-        List<String> ddiArray = new ArrayList<>(ddiMap.keySet());
-
-        // Criando um Adapter para o Spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, ddiArray);
+        List<String> ddiDisplayList = new ArrayList<>(ddiMap.keySet());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, ddiDisplayList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDDI.setAdapter(adapter);
 
-        // Configurando o Brasil (+55) como padrão
-        int defaultPosition = ddiArray.indexOf("+55");
+        buttonNext.setEnabled(false); // Botão começa desabilitado
+
+        int defaultPosition = ddiDisplayList.indexOf("+55 (Brasil)"); // Ajuste se o texto de display for diferente
         if (defaultPosition >= 0) {
             spinnerDDI.setSelection(defaultPosition);
+            selectedDDIValue = ddiMap.get(ddiDisplayList.get(defaultPosition)); // Pega o valor "55"
+        } else if (!ddiDisplayList.isEmpty()){
+            spinnerDDI.setSelection(0); // Seleciona o primeiro se Brasil não for encontrado
+            selectedDDIValue = ddiMap.get(ddiDisplayList.get(0));
         }
 
-        // Listener para capturar o DDI selecionado
         spinnerDDI.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String ddiCode = (String) parent.getItemAtPosition(position);
-                selectedDDI = ddiMap.get(ddiCode);
+                String ddiDisplayKey = (String) parent.getItemAtPosition(position);
+                selectedDDIValue = ddiMap.get(ddiDisplayKey); // Pega o valor numérico do DDI (ex: "55")
 
-                // Altera a dica do EditText conforme o país selecionado
-                PhoneFormatInfo formatInfo = phoneFormats.get(selectedDDI);
+                PhoneFormatInfo formatInfo = phoneFormats.get(selectedDDIValue);
                 if (formatInfo != null) {
                     editPhone.setHint(formatInfo.getExample());
+                } else {
+                    editPhone.setHint("Número de telefone");
                 }
+                // Limpa o campo de telefone e revalida para habilitar/desabilitar o botão
+                editPhone.setText("");
+                checkInputsForButtonState();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedDDIValue = null;
+                editPhone.setHint("Número de telefone");
+                checkInputsForButtonState();
+            }
+        });
+
+        editPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // A formatação em tempo real pode ser complexa e variar muito.
+                // Por ora, focaremos na validação e formatação ao confirmar.
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                selectedDDI = "55"; // Padrão: Brasil
-            }
-        });
+            public void afterTextChanged(Editable s) {
+                if (isFormattingPhone) return; // Evita loop infinito se a formatação mudar o texto
 
-        // Listener para o botão "Próximo"
-        buttonNext.setOnClickListener(v -> {
-            String phone = editPhone.getText().toString().trim();
+                String phoneClean = s.toString().replaceAll("[^0-9]", "");
+                PhoneFormatInfo formatInfo = phoneFormats.get(selectedDDIValue);
+                String formatted = phoneClean; // Valor padrão se não houver formatação
 
-            // Remove formatação para validação
-            String phoneClean = phone.replaceAll("[^0-9]", "");
-
-            if (phone.isEmpty()) {
-                Toast.makeText(Number.this, "Digite o número de telefone!", Toast.LENGTH_SHORT).show();
-            } else {
-                // Formata o telefone de acordo com o país selecionado
-                String formattedPhone = formatPhoneNumber(phoneClean, selectedDDI);
-                String fullPhoneNumber = "+" + selectedDDI + phoneClean;
-
-                if (!isValidPhoneNumber(phoneClean, selectedDDI)) {
-                    Toast.makeText(Number.this, "Número de telefone inválido para o país selecionado!", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Atualiza o objeto Usuario com o número de telefone formatado
-                    usuario.setNumber(fullPhoneNumber);
-
-                    // Criptografa o número de telefone formatado
-                    String numeroCriptografado = CryptoUtils.encrypt(formattedPhone);
-
-                    // Monta o JSON
-                    JSONObject json = new JSONObject();
-                    try{
-                        json.put("id", getId());
-                        json.put("numero", numeroCriptografado);
-                    }  catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    // Envia para o servidor
-                    enviarParaServidor(json.toString());
-
-                    // Passa o objeto Usuario para a próxima atividade (Password)
-                    Intent intent = new Intent(Number.this, Password.class);
-                    intent.putExtra("usuario", usuario);
-                    startActivity(intent);
+                if (formatInfo != null) {
+                    // Aplica a formatação apenas para exibição, mas valida o número limpo
+                    formatted = applyFormat(phoneClean, formatInfo.getFormat());
                 }
+
+                isFormattingPhone = true;
+                editPhone.setText(formatted);
+                editPhone.setSelection(formatted.length());
+                isFormattingPhone = false;
+
+                checkInputsForButtonState();
             }
         });
 
-        // Listener para o botão "Voltar"
-        buttonBack.setOnClickListener(v -> {
-            // Volta para a tela de Email
-            Intent intent = new Intent(Number.this, Email.class);
+
+        buttonNext.setOnClickListener(v -> {
+            String phoneInput = editPhone.getText().toString();
+            String phoneClean = phoneInput.replaceAll("[^0-9]", ""); // Números puros
+
+            if (selectedDDIValue == null || selectedDDIValue.isEmpty()) {
+                Toast.makeText(Number.this, "Selecione um DDI.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (phoneClean.isEmpty()) {
+                editPhone.setError("Digite o número de telefone!");
+                editPhone.requestFocus();
+                return;
+            }
+
+            if (!isValidPhoneNumber(phoneClean, selectedDDIValue)) {
+                editPhone.setError("Número de telefone inválido para " + spinnerDDI.getSelectedItem().toString());
+                editPhone.requestFocus();
+                return;
+            }
+
+            // Salva o número de telefone completo no formato E.164 (ex: +5511987654321)
+            // O servidor espera um campo "phone"
+            String fullPhoneNumberE164 = "+" + selectedDDIValue + phoneClean;
+            usuario.setPhone(fullPhoneNumberE164); // Assumindo que você tem setPhone em Usuario.java
+            // ou usuario.setNumber(fullPhoneNumberE164);
+
+            // NENHUMA CRIPTOGRAFIA OU CHAMADA AO SERVIDOR AQUI
+
+            // Passa o objeto Usuario atualizado para a próxima atividade (Password.class)
+            Intent intent = new Intent(Number.this, Password.class);
+            intent.putExtra("usuario_parcial", usuario);
             startActivity(intent);
-            finish(); // Finaliza a atividade atual para liberar memória
+        });
+
+        buttonBack.setOnClickListener(v -> {
+            finish(); // Volta para a Activity anterior (Email.java)
         });
     }
 
-    // Método para inicializar os códigos de país com apenas o DDI no spinner
-    private void initDDIMap() {
-        ddiMap = new LinkedHashMap<>();
+    private void checkInputsForButtonState() {
+        String phoneClean = editPhone.getText().toString().replaceAll("[^0-9]", "");
+        boolean isDDISelected = selectedDDIValue != null && !selectedDDIValue.isEmpty();
 
-        // América do Sul
-        ddiMap.put("+55", "55");
-        ddiMap.put("+54", "54");
-        ddiMap.put("+591", "591");
-        ddiMap.put("+56", "56");
-        ddiMap.put("+57", "57");
-        ddiMap.put("+593", "593");
-        ddiMap.put("+592", "592");
-        ddiMap.put("+595", "595");
-        ddiMap.put("+51", "51");
-        ddiMap.put("+597", "597");
-        ddiMap.put("+598", "598");
-        ddiMap.put("+58", "58");
-
-        // América do Norte
-        ddiMap.put("+1", "1");
-        ddiMap.put("+52", "52");
-
-        // América Central e Caribe (parte da América do Norte)
-        ddiMap.put("+506", "506");
-        ddiMap.put("+503", "503");
-        ddiMap.put("+502", "502");
-        ddiMap.put("+504", "504");
-        ddiMap.put("+505", "505");
-        ddiMap.put("+507", "507");
-        ddiMap.put("+53", "53");
-        ddiMap.put("+1876", "1876");
-        ddiMap.put("+1809", "1809");
-
-        // Europa
-        ddiMap.put("+49", "49");
-        ddiMap.put("+43", "43");
-        ddiMap.put("+32", "32");
-        ddiMap.put("+359", "359");
-        ddiMap.put("+385", "385");
-        ddiMap.put("+45", "45");
-        ddiMap.put("+421", "421");
-        ddiMap.put("+386", "386");
-        ddiMap.put("+34", "34");
-        ddiMap.put("+372", "372");
-        ddiMap.put("+358", "358");
-        ddiMap.put("+33", "33");
-        ddiMap.put("+30", "30");
-        ddiMap.put("+36", "36");
-        ddiMap.put("+353", "353");
-        ddiMap.put("+39", "39");
-        ddiMap.put("+371", "371");
-        ddiMap.put("+370", "370");
-        ddiMap.put("+352", "352");
-        ddiMap.put("+356", "356");
-        ddiMap.put("+31", "31");
-        ddiMap.put("+48", "48");
-        ddiMap.put("+351", "351");
-        ddiMap.put("+44", "44");
-        ddiMap.put("+420", "420");
-        ddiMap.put("+40", "40");
-        ddiMap.put("+46", "46");
-        ddiMap.put("+41", "41");
+        // Habilita o botão se um DDI estiver selecionado e o telefone tiver uma validação básica
+        // (aqui, apenas se não estiver vazio, a validação completa é no clique)
+        buttonNext.setEnabled(isDDISelected && !phoneClean.isEmpty());
     }
 
-    // Método para inicializar os formatos de telefone de cada país
+    private void initDDIMap() {
+        ddiMap = new LinkedHashMap<>(); // Usar LinkedHashMap para manter a ordem de inserção
+        ddiMap.put("+55", "55");
+        ddiMap.put("+1", "1");
+        ddiMap.put("+44", "44");
+        ddiMap.put("+351", "351");
+        ddiMap.put("+34", "34");
+        ddiMap.put("+49", "49");
+        ddiMap.put("+33", "33");
+        ddiMap.put("+39", "39");
+        ddiMap.put("+54", "54");
+    }
+
     private void initPhoneFormats() {
         phoneFormats = new HashMap<>();
-
-        // América do Sul
-        phoneFormats.put("55", new PhoneFormatInfo(11, "XX XXXXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("54", new PhoneFormatInfo(10, "XX XXXX-XXXX", "XX XXXX-XXXX"));
-        phoneFormats.put("591", new PhoneFormatInfo(8, "X XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("56", new PhoneFormatInfo(9, "X XXXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("57", new PhoneFormatInfo(10, "XXX XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("593", new PhoneFormatInfo(9, "XX XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("592", new PhoneFormatInfo(7, "XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("595", new PhoneFormatInfo(9, "XXX XXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("51", new PhoneFormatInfo(9, "XXX XXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("597", new PhoneFormatInfo(7, "XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("598", new PhoneFormatInfo(8, "X XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("58", new PhoneFormatInfo(10, "XXX-XXX-XXXX", "XX XXXXX-XXXX"));
-
-        // América do Norte
-        phoneFormats.put("1", new PhoneFormatInfo(10, "(XXX) XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("52", new PhoneFormatInfo(10, "XX XXXX-XXXX", "XX XXXXX-XXXX"));
-
-        // Europa
-        phoneFormats.put("49", new PhoneFormatInfo(10, "XXX XXXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("43", new PhoneFormatInfo(10, "XXX XXXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("32", new PhoneFormatInfo(9, "XXX XX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("359", new PhoneFormatInfo(9, "XXX XXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("385", new PhoneFormatInfo(9, "XX XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("45", new PhoneFormatInfo(8, "XX XX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("421", new PhoneFormatInfo(9, "XXX XXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("386", new PhoneFormatInfo(8, "XX XXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("34", new PhoneFormatInfo(9, "XXX XXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("372", new PhoneFormatInfo(8, "XXXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("358", new PhoneFormatInfo(9, "XX XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("33", new PhoneFormatInfo(9, "X XX XX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("30", new PhoneFormatInfo(10, "XXX XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("36", new PhoneFormatInfo(9, "XX XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("353", new PhoneFormatInfo(9, "XX XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("39", new PhoneFormatInfo(10, "XXX XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("371", new PhoneFormatInfo(8, "XX XXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("370", new PhoneFormatInfo(8, "XXX-XXXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("352", new PhoneFormatInfo(9, "XXX XXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("356", new PhoneFormatInfo(8, "XXXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("31", new PhoneFormatInfo(9, "X XX XX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("48", new PhoneFormatInfo(9, "XXX XXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("351", new PhoneFormatInfo(9, "XXX XXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("44", new PhoneFormatInfo(10, "XXXX XXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("420", new PhoneFormatInfo(9, "XXX XXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("40", new PhoneFormatInfo(9, "XXX XXX-XXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("46", new PhoneFormatInfo(9, "XX XXX-XXXX", "XX XXXXX-XXXX"));
-        phoneFormats.put("41", new PhoneFormatInfo(9, "XX XXX-XXXX", "XX XXXXX-XXXX"));
-
-        // Completar mais formatos de outros países conforme necessário...
+        // Exemplos: (Comprimento dos dígitos, String de formato para applyFormat, Exemplo para hint)
+        phoneFormats.put("55", new PhoneFormatInfo(11, "(XX) XXXXX-XXXX", "(11) 98765-4321")); // Celular SP
+        phoneFormats.put("1", new PhoneFormatInfo(10, "(XXX) XXX-XXXX", "(555) 123-4567"));   // EUA
+        phoneFormats.put("44", new PhoneFormatInfo(10, "XXXX XXXXXX", "07123 456789")); // UK Mobile
+        // Adicione mais formatos conforme sua lista
     }
 
-    // Método para validar o número de telefone de acordo com o país
-    private boolean isValidPhoneNumber(String phoneNumber, String countryCode) {
-        if (phoneNumber == null || phoneNumber.isEmpty()) {
+    private boolean isValidPhoneNumber(String phoneCleanDigits, String ddiValue) {
+        if (phoneCleanDigits == null || phoneCleanDigits.isEmpty() || ddiValue == null) {
             return false;
         }
-
-        PhoneFormatInfo formatInfo = phoneFormats.get(countryCode);
+        PhoneFormatInfo formatInfo = phoneFormats.get(ddiValue);
         if (formatInfo != null) {
-            // Validação básica de comprimento
-            return phoneNumber.length() == formatInfo.getLength();
+            // Validação primária pelo comprimento esperado dos dígitos
+            return phoneCleanDigits.length() == formatInfo.getLength();
         }
-
-        // Se não temos info específica, usamos validação genérica do Android
-        return PhoneNumberUtils.isGlobalPhoneNumber("+" + countryCode + phoneNumber);
+        // Fallback para uma validação genérica se não houver formato específico (pode não ser muito precisa)
+        // return PhoneNumberUtils.isGlobalPhoneNumber("+" + ddiValue + phoneCleanDigits);
+        return phoneCleanDigits.length() >= 7 && phoneCleanDigits.length() <= 15; // Validação de comprimento genérico
     }
 
-    // Método para formatar o número de telefone de acordo com o país
-    private String formatPhoneNumber(String phoneNumber, String countryCode) {
-        if (phoneNumber == null || phoneNumber.isEmpty()) {
-            return phoneNumber;
+    private String formatPhoneNumber(String phoneCleanDigits, String ddiValue) {
+        if (phoneCleanDigits == null || phoneCleanDigits.isEmpty() || ddiValue == null) {
+            return phoneCleanDigits;
         }
-
-        PhoneFormatInfo formatInfo = phoneFormats.get(countryCode);
+        PhoneFormatInfo formatInfo = phoneFormats.get(ddiValue);
         if (formatInfo != null) {
-            return applyFormat(phoneNumber, formatInfo.getFormat());
+            return applyFormat(phoneCleanDigits, formatInfo.getFormat());
         }
-
-        // Se não temos formato específico, retorna o número como está
-        return phoneNumber;
+        return phoneCleanDigits; // Retorna limpo se não houver formato
     }
 
-    // Aplica o formato ao número de telefone
-    private String applyFormat(String phoneNumber, String format) {
-        if (phoneNumber == null || phoneNumber.isEmpty() || format == null || format.isEmpty()) {
-            return phoneNumber;
+    private String applyFormat(String phoneNumberDigits, String formatPattern) {
+        if (phoneNumberDigits == null || phoneNumberDigits.isEmpty() || formatPattern == null || formatPattern.isEmpty()) {
+            return phoneNumberDigits;
         }
-
         StringBuilder result = new StringBuilder();
         int phoneIndex = 0;
-
-        for (int i = 0; i < format.length(); i++) {
-            if (format.charAt(i) == 'X') {
-                if (phoneIndex < phoneNumber.length()) {
-                    result.append(phoneNumber.charAt(phoneIndex));
-                    phoneIndex++;
-                }
+        for (int i = 0; i < formatPattern.length() && phoneIndex < phoneNumberDigits.length(); i++) {
+            char formatChar = formatPattern.charAt(i);
+            if (formatChar == 'X') {
+                result.append(phoneNumberDigits.charAt(phoneIndex));
+                phoneIndex++;
             } else {
-                result.append(format.charAt(i));
+                result.append(formatChar);
             }
         }
-
+        // Se sobrourem dígitos no número que não couberam no formato, pode adicionar ao final
+        // ou truncar, dependendo do comportamento desejado. Por simplicidade, aqui não adiciona.
         return result.toString();
     }
 
-    // Método para obter o ID do usuário
-    private int getId() {
-        if (usuario != null) {
-            return usuario.getId();
-        }
-        return -1; // Valor padrão caso o usuário não esteja disponível
-    }
+    // O método getId() não é necessário aqui.
+    // O método enviarParaServidor() foi REMOVIDO.
 
-    private void enviarParaServidor(String dadosCriptografados) {
-        String url = ""; // URL da API
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                response -> {
-                    Log.d("API", "Resposta: " + response);
-                },
-                error -> {
-                    Log.e("API", "Erro: ", error);
-                }
-        ) {
-            @Override
-            public byte[] getBody() {
-                return dadosCriptografados.getBytes();
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json"; // Envio do JSON
-            }
-        };
-
-        queue.add(stringRequest);
-    }
-
-    // Classe auxiliar para armazenar informações de formato de telefone
     private static class PhoneFormatInfo {
-        private int length;
-        private String format;
-        private String example;
+        private int length; // Comprimento esperado dos DÍGITOS do número (sem DDI)
+        private String format; // Padrão de formatação com 'X' para dígitos
+        private String example; // Exemplo para o hint
 
         public PhoneFormatInfo(int length, String format, String example) {
             this.length = length;
             this.format = format;
             this.example = example;
         }
-
-        public int getLength() {
-            return length;
-        }
-
-        public String getFormat() {
-            return format;
-        }
-
-        public String getExample() {
-            return example;
-        }
+        public int getLength() { return length; }
+        public String getFormat() { return format; }
+        public String getExample() { return example; }
     }
 }

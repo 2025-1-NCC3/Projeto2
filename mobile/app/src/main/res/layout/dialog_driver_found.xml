@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Motorista Encontrado!"
+        android:fontFamily="@font/ubermovebold"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"/>
+
+
+    <TextView
+        android:fontFamily="@font/ubermovemedium"
+        android:id="@+id/driver_name_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nome: [Nome do Motorista]"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:fontFamily="@font/ubermovemedium"
+        android:id="@+id/car_details_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Carro: [Modelo] ([Cor])"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:fontFamily="@font/ubermovemedium"
+        android:id="@+id/license_plate_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Placa: [Placa]"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:fontFamily="@font/ubermovemedium"
+        android:id="@+id/eta_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chega em: [X] min"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:textStyle="italic"
+        android:layout_marginBottom="24dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/decline_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Recusar"
+            android:fontFamily="@font/ubermovemedium"
+            android:textAllCaps="false"
+            android:backgroundTint="#E4E4E4"
+            android:textColor="#e02a4a"
+            app:cornerRadius="10dp"
+            android:textSize="16dp"
+            android:layout_marginEnd="8dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/accept_button"
+            android:layout_width="0dp"
+            app:cornerRadius="10dp"
+            android:textSize="16dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Aceitar"
+            app:backgroundTint="@android:color/black" /> </LinearLayout>
+
+</LinearLayout>
