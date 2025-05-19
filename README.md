@@ -14,7 +14,7 @@ Um aplicativo mobile inovador para tornar as viagens da Uber mais seguras, utili
 - **João Victor Rezende Silva** 
 - **Arthur Paltrinieri Silva**
 
-###Professores e Orientadores:
+### Professores e Orientadores
 - **Kátia Milani Lara Bossi** 
 - **Marco Aurélio** 
 - **Victor Rosetti** 
