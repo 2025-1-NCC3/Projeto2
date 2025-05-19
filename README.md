@@ -38,9 +38,6 @@ A arquitetura desse projeto envolve uma série de funcionalidades avançadas e s
 
 ## 🎯 Como Rodar o Projeto
 
-### Pré-requisitos
-
-
 
 ### Instalação e Execução
 
