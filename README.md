@@ -64,7 +64,8 @@ Caso queira contribuir, siga estas etapas:
 4. Faça um push para a branch (`git push origin minha-feature`).
 5. Abra um Pull Request.
 
-📋 Licença/License
+## 📋 Licença/License
+
 Uber SafeRide por Vitor do Amaral Pereira, Julia Tosato, João Victor Rezende, Arthur Paltrinieri é licenciado por CC BY 4.0.
 
 🎓 Referências
