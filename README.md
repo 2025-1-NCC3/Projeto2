@@ -68,7 +68,8 @@ Caso queira contribuir, siga estas etapas:
 
 Uber SafeRide por Vitor do Amaral Pereira, Julia Tosato, João Victor Rezende, Arthur Paltrinieri é licenciado por CC BY 4.0.
 
-🎓 Referências
+## 🎓 Referências
+
 1. Android Studio
 2. Documentações Java
 3. Documentações Google maps
