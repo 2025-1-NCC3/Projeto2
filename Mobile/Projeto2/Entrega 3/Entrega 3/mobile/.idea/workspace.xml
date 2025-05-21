@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+    <layouts>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_cadastrar_carro.xml">
+        <config>
+          <theme>@style/Theme.SafeRide</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_confirmar_viagem.xml">
+        <config>
+          <theme>@style/Theme.SafeRide</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_confirmar_viagem_motorista.xml">
+        <config>
+          <theme>@style/Theme.SafeRide</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_genero.xml">
+        <config>
+          <theme>@style/Theme.SafeRide</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
+        <config>
+          <theme>@style/Theme.SafeRide</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_maps.xml">
+        <config>
+          <theme>@style/Theme.SafeRide</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_menu_rider.xml">
+        <config>
+          <theme>@style/Theme.SafeRide</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_pagina2.xml">
+        <config>
+          <theme>@style/Theme.SafeRide</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_pagina3.xml">
+        <config>
+          <theme>@style/Theme.SafeRide</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_pagina4.xml">
+        <config>
+          <theme>@style/Theme.SafeRide</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_pagina_principal.xml">
+        <config>
+          <theme>@style/Theme.SafeRide</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_politica_privacidade.xml">
+        <config>
+          <theme>@style/Theme.SafeRide</theme>
+        </config>
+      </layout>
+    </layouts>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="cc20c2bc-511b-4426-959d-1c3c822e8bbc" name="Changes" comment="ajuste de pastas e adição do doc de Projeto de Extensão">
+      <change beforePath="$PROJECT_DIR$/../Análise de Dados/Entrega Final Analise Descritiva de Dados.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Análise de Dados/Tempo Corrida Avaliação da Dispersão dos Dados pelo Coeficiente de Variação + Interpretação - João - Analise Descritiva de Dados.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Programação Orientada a Objetos/Implementação de POO no Projeto PI.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Projeto Interdisciplinar - Aplicativo Movel/app-release.aab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Projeto Interdisciplinar - Aplicativo Movel/app-release.apk" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\julia\.android\avd\Medium_Phone.avd)]" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="GenerateSignedApkSettings">
+    <option name="KEY_STORE_PATH" value="C:\Mobile\Projeto2\fecap_keystore (1).jks" />
+    <option name="KEY_ALIAS" value="fecap_2024_1" />
+    <option name="REMEMBER_PASSWORDS" value="true" />
+    <option name="BUILD_TARGET_KEY" value="apk" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;juliatosato&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/2025-1-NCC3/Projeto2.git&quot;,
+    &quot;accountId&quot;: &quot;211cb577-132b-403b-93e0-42bc7b609fdb&quot;
+  },
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
+    },
+    &quot;owner&quot;: &quot;2025-1-NCC3&quot;,
+    &quot;repository&quot;: &quot;Projeto2&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2wNRO4xYYNJVLSel3RmAlDqL0M0" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Android App.app.executor": "Run",
+    "ApkExportedModule": "SafeRide.app",
+    "BundleExportedModule": "SafeRide.app",
+    "ExportApk.ApkPathForSafeRide.app": "C:\\Mobile\\Projeto2\\mobile\\app",
+    "ExportBundle.BundlePathForSafeRide.app": "C:\\Mobile\\Projeto2\\mobile\\app",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "feature/ajustePastas",
+    "kotlin-language-version-configured": "true",
+    "last_directory_selection": "C:/Mobile/Projeto2/mobile/app/src/main/java",
+    "last_opened_file_path": "C:/Mobile/Projeto2/Entrega 3/Projeto"
+  },
+  "keyToStringList": {
+    "ExportApk.BuildVariants": [
+      "release"
+    ]
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+      <module name="SafeRide.app" />
+      <option name="ANDROID_RUN_CONFIGURATION_SCHEMA_VERSION" value="1" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="ALLOW_ASSUME_VERIFIED" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="RESTORE_ENABLED" value="false" />
+      <option name="RESTORE_FILE" value="" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Hybrid>
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cc20c2bc-511b-4426-959d-1c3c822e8bbc" name="Changes" comment="" />
+      <created>1745880009545</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745880009545</updated>
+    </task>
+    <task id="LOCAL-00001" summary="commit das mudanças para o build do APK e do AAB do projeto">
+      <option name="closed" value="true" />
+      <created>1745881314477</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1745881314477</updated>
+    </task>
+    <task id="LOCAL-00002" summary="últimas mudanças para a criptografia e envio do JSON para o servidor">
+      <option name="closed" value="true" />
+      <created>1747265313696</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1747265313696</updated>
+    </task>
+    <task id="LOCAL-00003" summary="adição do id para alguns atributos que estavam sem">
+      <option name="closed" value="true" />
+      <created>1747265837348</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1747265837348</updated>
+    </task>
+    <task id="LOCAL-00004" summary="adição do id para alguns atributos que estavam sem">
+      <option name="closed" value="true" />
+      <created>1747621126094</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1747621126094</updated>
+    </task>
+    <task id="LOCAL-00005" summary="ajuste de pastas e adição do doc de Projeto de Extensão">
+      <option name="closed" value="true" />
+      <created>1747846962198</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1747846962198</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="commit das mudanças para o build do APK e do AAB do projeto" />
+    <MESSAGE value="últimas mudanças para a criptografia e envio do JSON para o servidor" />
+    <MESSAGE value="adição do id para alguns atributos que estavam sem" />
+    <MESSAGE value="ajuste de pastas e adição do doc de Projeto de Extensão" />
+    <option name="LAST_COMMIT_MESSAGE" value="ajuste de pastas e adição do doc de Projeto de Extensão" />
+  </component>
+  <component name="play_dynamic_filters_status">
+    <option name="appIdToCheckInfo">
+      <map>
+        <entry key="br.fecap.pi.saferide">
+          <value>
+            <CheckInfo lastCheckTimestamp="1747249967954" />
+          </value>
+        </entry>
+        <entry key="br.fecap.pi.saferide.test">
+          <value>
+            <CheckInfo lastCheckTimestamp="1747249967954" />
+          </value>
+        </entry>
+        <entry key="br.fecapccp.saferide">
+          <value>
+            <CheckInfo lastCheckTimestamp="1745880407181" />
+          </value>
+        </entry>
+        <entry key="br.fecapccp.saferide.test">
+          <value>
+            <CheckInfo lastCheckTimestamp="1745880407178" />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
