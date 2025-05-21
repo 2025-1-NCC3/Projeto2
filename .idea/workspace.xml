@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8fb9541c-32eb-46ee-a3e9-6e67b0a5257b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Análise de Dados/Entrega Final Analise Descritiva de Dados.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Análise de Dados/Tempo Corrida Avaliação da Dispersão dos Dados pelo Coeficiente de Variação + Interpretação - João - Analise Descritiva de Dados.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Programação Orientada a Objetos/Implementação de POO no Projeto PI.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Projeto Interdisciplinar - Aplicativo Movel/app-release.aab" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Projeto Interdisciplinar - Aplicativo Movel/app-release.apk" beforeDir="false" />
-    </list>
+    <list default="true" id="8fb9541c-32eb-46ee-a3e9-6e67b0a5257b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -53,10 +44,10 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "feature/ajustePastas",
+    "git-widget-placeholder": "#31 on feature/ajustePastas",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Mobile/Projeto2/Entrega 3/Projeto/mobile"
+    "last_opened_file_path": "C:/Mobile/Projeto2/Entrega 3/Entrega 3/Projeto/mobile"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
